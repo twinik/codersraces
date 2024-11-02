@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import { Inter } from "next/font/google";
-import ClientSessionProvider from "@/components/client-session-provider";
 import { MainNav } from "@/components/main-nav";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -28,16 +27,14 @@ export default function RootLayout({
 				<link rel="icon" type="image/x-icon" href="./favicon.ico" />
 			</head>
 			<body className={inter.className}>
-				<ClientSessionProvider>
-					<div className="dark">
-						<div className="min-h-screen bg-background text-foreground flex flex-col">
-							<MainNav />
-							{children}
-						</div>
+				<div className="dark">
+					<div className="min-h-screen bg-background text-foreground flex flex-col">
+						<MainNav />
+						{children}
 					</div>
-					<SpeedInsights />
-					<Analytics />
-				</ClientSessionProvider>
+				</div>
+				<SpeedInsights />
+				<Analytics />
 			</body>
 		</html>
 	);
