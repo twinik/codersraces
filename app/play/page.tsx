@@ -18,9 +18,11 @@ export default function Play() {
 	return (
 		<main className="flex-grow container mx-auto px-4 py-8">
 			<div className="max-w-7xl mx-auto space-y-6">
-				<div className="animate-fade-in-left animate-delay-400 animate-duration-900">
-					<h1 className="text-3xl font-bold mb-2">Elige tu modo de juego</h1>
-					<p className="text-muted-foreground">
+				<div className="animate-fade-in-left animate-delay-400 animate-duration-900 text-center md:text-left">
+					<h1 className="text-2xl md:text-3xl font-bold mb-2">
+						Elige tu modo de juego
+					</h1>
+					<p className="text-sm md:text-base text-muted-foreground">
 						Practica tus habilidades o compite contra otros jugadores iniciando
 						sesión con tu cuenta de GitHub
 					</p>
@@ -38,7 +40,7 @@ export default function Play() {
 						</CardHeader>
 						<CardContent>
 							<div className="space-y-4">
-								<div className="min-h-[200px] rounded-md bg-muted p-4">
+								<div className="min-h-[150px] md:min-h-[200px] rounded-md bg-muted p-4 overflow-x-auto">
 									<pre className="text-sm text-muted-foreground">
 										<code>{`function example() {
   // Tu código aquí
@@ -46,9 +48,9 @@ export default function Play() {
 }`}</code>
 									</pre>
 								</div>
-								<div className="flex items-center gap-4">
+								<div className="flex flex-col md:flex-row items-center gap-4">
 									<Select>
-										<SelectTrigger className="w-[200px]">
+										<SelectTrigger className="w-full md:w-[200px]">
 											<SelectValue placeholder="Selecciona un lenguaje" />
 										</SelectTrigger>
 										<SelectContent>
@@ -58,7 +60,9 @@ export default function Play() {
 											<SelectItem value="java">Java</SelectItem>
 										</SelectContent>
 									</Select>
-									<Button className="ml-auto">Comenzar</Button>
+									<Button className="w-full md:w-auto md:ml-auto">
+										Comenzar
+									</Button>
 								</div>
 							</div>
 						</CardContent>
@@ -75,7 +79,7 @@ export default function Play() {
 						</CardHeader>
 						<CardContent>
 							<div className="space-y-4">
-								<div className="min-h-[200px] rounded-md bg-muted p-4">
+								<div className="min-h-[150px] md:min-h-[200px] rounded-md bg-muted p-4 overflow-x-auto">
 									<pre className="text-sm text-muted-foreground">
 										<code>{`function compete() {
   // Compite contra otros
@@ -83,9 +87,9 @@ export default function Play() {
 }`}</code>
 									</pre>
 								</div>
-								<div className="flex items-center gap-4">
+								<div className="flex flex-col md:flex-row items-center gap-4">
 									<Select>
-										<SelectTrigger className="w-[200px]">
+										<SelectTrigger className="w-full md:w-[200px]">
 											<SelectValue placeholder="Selecciona un lenguaje" />
 										</SelectTrigger>
 										<SelectContent>
@@ -95,7 +99,9 @@ export default function Play() {
 											<SelectItem value="java">Java</SelectItem>
 										</SelectContent>
 									</Select>
-									<Button className="ml-auto">Comenzar</Button>
+									<Button className="w-full md:w-auto md:ml-auto">
+										Comenzar
+									</Button>
 								</div>
 							</div>
 						</CardContent>
