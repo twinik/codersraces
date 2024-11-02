@@ -7,8 +7,12 @@ import { MainNav } from "@/components/main-nav";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-	title: "Coders Race",
-	description: "Coders Race page",
+	title: "Coders Races",
+	description:
+		"Mejora tus habilidades de programación compitiendo en desafíos de código en tiempo real. Practica, compite y aprende con otros desarrolladores.",
+	icons: {
+		icon: "/favicon.ico",
+	},
 };
 
 export default function RootLayout({
@@ -18,6 +22,9 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en">
+			<head>
+				<link rel="icon" type="image/x-icon" href="./favicon.ico" />
+			</head>
 			<body className={inter.className}>
 				<div className="dark">
 					<div className="min-h-screen bg-background text-foreground flex flex-col">
