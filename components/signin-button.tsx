@@ -21,6 +21,10 @@ export function SignInButton() {
 		setIsLoading(false);
 	};
 
+	const handleSignOut = () => {
+		signOut();
+	};
+
 	if (status === "loading") {
 		return (
 			<Button variant="outline" disabled className="flex items-center">
@@ -56,7 +60,7 @@ export function SignInButton() {
 						<span>Mi Perfil</span>
 					</DropdownMenuItem>
 					<DropdownMenuItem
-						onClick={() => signOut()}
+						onClick={handleSignOut}
 						className="text-red-600 hover:bg-red-600 hover:text-white focus:bg-destructive focus:text-destructive-foreground w-full px-4 py-2 hover:cursor-pointer"
 					>
 						<LogOut className="mr-2 h-4 w-4" />
