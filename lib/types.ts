@@ -1,5 +1,7 @@
 export interface User {
+	id: string;
 	username: string;
+	name: string;
 }
 
 export interface CodeSnippet {
@@ -14,25 +16,25 @@ export interface RaceResult {
 	id: string;
 	userId: string;
 	snippetId: string;
-	wpm: number;
+	cpm: number;
 	accuracy: number;
 	timeElapsed: number;
 	completedAt: Date;
 }
 
 export interface UserStats {
+	userId: string;
 	totalRaces: number;
-	averageWpm: number;
+	totalTime: number;
+	averageCpm: number;
 	averageAccuracy: number;
-	bestScore: number;
-	lastRaceDate: Date;
 }
 
 export interface UserLeaderboard {
+	userId: string;
 	position: number;
-	user: User;
-	cpm: number;
-	precision: number;
-	completed: number;
+	averageCpm: number;
+	averageAccuracy: number;
+	racesCompleted: number;
 	principalLanguages: string[];
 }

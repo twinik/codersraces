@@ -11,7 +11,13 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import {
-	ArrowUpDown,
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+	Info,
 	ChevronFirst,
 	ChevronLast,
 	ChevronLeft,
@@ -55,7 +61,16 @@ export default function LeaderBoardTable({ data }: { data: any[] }) {
 								<th className="text-left text-sm text-muted-foreground font-medium px-4 py-3">
 									<div className="flex items-center gap-2">
 										CPM promedio
-										<ArrowUpDown className="h-4 w-4" />
+										<TooltipProvider>
+											<Tooltip>
+												<TooltipTrigger>
+													<Info className="h-4 w-4" />
+												</TooltipTrigger>
+												<TooltipContent side="bottom">
+													<p>Carácteres por minuto</p>
+												</TooltipContent>
+											</Tooltip>
+										</TooltipProvider>
 									</div>
 								</th>
 								<th className="text-left text-sm text-muted-foreground font-medium px-4 py-3">
@@ -140,7 +155,7 @@ export default function LeaderBoardTable({ data }: { data: any[] }) {
 				</div>
 
 				<div className="border-t border-border p-4 bg-card flex items-center justify-between">
-					<div className="flex items-center gap-2">
+					<div className="flex items-center md:gap-2 mr-3 md:mr-0">
 						<span className="text-sm text-muted-foreground">
 							Filas por página
 						</span>
