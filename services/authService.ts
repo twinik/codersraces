@@ -8,9 +8,12 @@ export const fetchSession = async () => {
 };
 
 export const onAuthStateChange = (callback: (session: any) => void) => {
-	return supabase.auth.onAuthStateChange((_, session) => {
+	const {
+		data: { subscription },
+	} = supabase.auth.onAuthStateChange((_, session) => {
 		callback(session);
 	});
+	return subscription;
 };
 
 export const signInWithGitHub = async () => {
