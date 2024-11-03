@@ -1,9 +1,7 @@
 import { supabase } from "@/utils/supabase/client";
 import { UserStats, RaceResult } from "@/lib/types";
 
-export const getUserStats = async (
-	user_id: string
-): Promise<UserStats | null> => {
+export const getUserStats = async (user_id: string): Promise<UserStats> => {
 	const { data, error } = await supabase
 		.from("user_stats")
 		.select(
@@ -14,7 +12,16 @@ export const getUserStats = async (
 
 	if (error) {
 		console.error("Error al obtener estadísticas del usuario:", error);
-		return null;
+		const userStatsNull: UserStats = {
+			user_id: "",
+			total_races: 0,
+			total_time: 0,
+			average_cpm: 0,
+			best_cpm: 0,
+			average_accuracy: 0,
+			principal_language: "",
+		};
+		return userStatsNull;
 	}
 
 	return data as UserStats;

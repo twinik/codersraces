@@ -5,7 +5,7 @@ export const getLeaderboard = async (
 	rows: number
 ): Promise<UserLeaderboard[]> => {
 	const { data, error } = await supabase
-		.from("leaderboard_view") // Cambiamos 'user_stats' a 'leaderboard_view'
+		.from("leaderboard_view")
 		.select(
 			`
             user_id,
