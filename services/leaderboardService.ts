@@ -34,7 +34,7 @@ export const getLeaderboard = async (
 		return [];
 	}
 
-	return data.map((stat, index) => ({
+	const leaderboard = data.map((stat, index) => ({
 		user_id: stat.user_id,
 		avatarURL: stat.avatar_url || "",
 		name: stat.full_name || "",
@@ -44,4 +44,6 @@ export const getLeaderboard = async (
 		principal_language: stat.principal_language,
 		position: offset + index + 1,
 	}));
+
+	return leaderboard as UserLeaderboard[];
 };
