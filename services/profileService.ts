@@ -7,7 +7,7 @@ export const getUserStats = async (
 	const { data, error } = await supabase
 		.from("user_stats")
 		.select(
-			"user_id, total_races, total_time, average_cpm, best_cpm, average_accuracy"
+			"user_id, total_races, total_time, average_cpm, best_cpm, average_accuracy, principal_language"
 		)
 		.eq("user_id", user_id)
 		.single();

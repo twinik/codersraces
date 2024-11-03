@@ -8,6 +8,7 @@ import { fetchSession } from "@/services/authService";
 import { getUserRaces, getUserStats } from "@/services/profileService";
 import { UserSession, RaceResult, UserStats } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import { LanguageBadge, IconLanguage } from "@/components/language-badge";
 
 export default function Profile() {
 	const [user, setUser] = useState<UserSession | null>(null);
@@ -42,11 +43,12 @@ export default function Profile() {
 			<div className="dark min-h-screen bg-background text-foreground">
 				<main className="container mx-auto px-4 py-8">
 					<div className="max-w-5xl mx-auto space-y-8">
-						<div className="flex items-center gap-6">
+						<div className="flex items-start gap-6">
 							<Skeleton className="h-24 w-24 rounded-full" />
 							<div className="space-y-2">
 								<Skeleton className="h-8 w-48" />
 								<Skeleton className="h-4 w-32" />
+								<Skeleton className="h-6 w-24" />
 							</div>
 						</div>
 						<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -93,16 +95,19 @@ export default function Profile() {
 			<div className="min-h-screen bg-background text-foreground">
 				<main className="container mx-auto px-4 py-8">
 					<div className="max-w-5xl mx-auto space-y-8">
-						<div className="flex items-center gap-6">
+						<div className="flex items-start gap-6">
 							<Avatar className="h-24 w-24">
 								<AvatarImage src={user.avatarURL} alt={user.name} />
 								<AvatarFallback>
 									{user.name.charAt(0).toUpperCase()}
 								</AvatarFallback>
 							</Avatar>
-							<div>
-								<h1 className="text-4xl font-bold mb-2">{user.name}</h1>
+							<div className="space-y-2">
+								<h1 className="text-4xl font-bold">{user.name}</h1>
 								<p className="text-xl text-muted-foreground">{user.email}</p>
+								{stats?.principal_language && (
+									<LanguageBadge language={stats.principal_language} />
+								)}
 							</div>
 						</div>
 
@@ -199,12 +204,7 @@ export default function Profile() {
 														<td className="px-4 py-3">{race.cpm}</td>
 														<td className="px-4 py-3">{race.time_elapsed}s</td>
 														<td className="px-4 py-3">
-															<div className="flex items-center gap-2">
-																<div className="h-6 w-6 flex items-center justify-center rounded bg-yellow-500/10 text-yellow-500 text-xs font-medium">
-																	{race.language.substring(0, 2).toUpperCase()}
-																</div>
-																<span>{race.language}</span>
-															</div>
+															<IconLanguage language={race.language} />
 														</td>
 													</tr>
 												))

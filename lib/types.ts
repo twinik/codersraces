@@ -31,13 +31,13 @@ export interface UserStats {
 	average_cpm: number;
 	best_cpm: number;
 	average_accuracy: number;
+	principal_language: string;
 }
 
 export interface UserLeaderboard {
 	user_id: string;
-	position: number;
 	average_cpm: number;
 	average_accuracy: number;
 	races_completed: number;
-	principal_languages: string[];
+	principal_language: string;
 }
