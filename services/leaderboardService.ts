@@ -2,8 +2,13 @@ import { supabase } from "@/utils/supabase/client";
 import { UserLeaderboard } from "@/lib/types";
 
 export const getLeaderboard = async (
-	rows: number
+	page: number,
+	pageSize: number
 ): Promise<UserLeaderboard[]> => {
+	const offset = (page - 1) * pageSize;
+
+	const limit = page === 1 ? 20 : pageSize;
+
 	const { data, error } = await supabase
 		.from("leaderboard_view")
 		.select(
@@ -18,7 +23,7 @@ export const getLeaderboard = async (
             `
 		)
 		.order("average_cpm", { ascending: false })
-		.limit(rows);
+		.range(offset, offset + limit - 1);
 
 	if (error) {
 		console.error("Error fetching leaderboard data:", error.message);
@@ -29,7 +34,7 @@ export const getLeaderboard = async (
 		return [];
 	}
 
-	const leaderboard = data.map((stat, index) => ({
+	return data.map((stat, index) => ({
 		user_id: stat.user_id,
 		avatarURL: stat.avatar_url || "",
 		name: stat.full_name || "",
@@ -37,8 +42,6 @@ export const getLeaderboard = async (
 		average_accuracy: stat.average_accuracy,
 		total_races: stat.total_races,
 		principal_language: stat.principal_language,
-		position: index + 1,
+		position: offset + index + 1,
 	}));
-
-	return leaderboard as UserLeaderboard[];
 };

@@ -1,12 +1,6 @@
-import { Suspense } from "react";
-import { UserLeaderboard } from "@/lib/types";
-import { getLeaderboard } from "@/services/leaderboardService";
 import LeaderBoardTable from "@/components/leaderboard-table";
-import LeaderboardSkeleton from "@/components/ui/skeletons/leaderboard-skeleton";
 
 export default async function Leaderboard() {
-	const leaderboardData: UserLeaderboard[] = await getLeaderboard(10);
-
 	return (
 		<main className="flex-grow container mx-auto px-4 py-8">
 			<div className="max-w-7xl mx-auto space-y-6">
@@ -21,9 +15,7 @@ export default async function Leaderboard() {
 					</div>
 				</div>
 				<div className="overflow-x-auto">
-					<Suspense fallback={<LeaderboardSkeleton />}>
-						<LeaderBoardTable data={leaderboardData} />
-					</Suspense>
+					<LeaderBoardTable />
 				</div>
 			</div>
 		</main>
