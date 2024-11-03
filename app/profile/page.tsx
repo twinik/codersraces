@@ -3,32 +3,89 @@
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Activity, Clock, Trophy } from "lucide-react";
+import { Activity, Clock, Trophy, TrendingUp } from "lucide-react";
 import { fetchSession } from "@/services/authService";
-import { getUserStats } from "@/services/profileService";
+import { getUserRaces, getUserStats } from "@/services/profileService";
 import { UserSession, RaceResult, UserStats } from "@/lib/types";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Profile() {
 	const [user, setUser] = useState<UserSession | null>(null);
 	const [stats, setStats] = useState<UserStats | null>(null);
 	const [races, setRaces] = useState<RaceResult[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		const fetchUserData = async () => {
-			const fetchedSession = await fetchSession();
-			setUser(fetchedSession);
+			try {
+				const fetchedSession = await fetchSession();
+				setUser(fetchedSession);
 
-			if (fetchedSession?.id) {
-				const userStats = await getUserStats(fetchedSession.id);
-				setStats(userStats);
+				if (fetchedSession?.id) {
+					const userStats = await getUserStats(fetchedSession.id);
+					setStats(userStats);
+					const userRaces = await getUserRaces(fetchedSession.id);
+					setRaces(userRaces);
+				}
+			} catch (error) {
+				console.error("Error fetching user data:", error);
+			} finally {
+				setIsLoading(false);
 			}
 		};
 
 		fetchUserData();
 	}, []);
 
+	if (isLoading) {
+		return (
+			<div className="dark min-h-screen bg-background text-foreground">
+				<main className="container mx-auto px-4 py-8">
+					<div className="max-w-5xl mx-auto space-y-8">
+						<div className="flex items-center gap-6">
+							<Skeleton className="h-24 w-24 rounded-full" />
+							<div className="space-y-2">
+								<Skeleton className="h-8 w-48" />
+								<Skeleton className="h-4 w-32" />
+							</div>
+						</div>
+						<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+							{[...Array(4)].map((_, i) => (
+								<Card key={i}>
+									<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+										<Skeleton className="h-4 w-24" />
+										<Skeleton className="h-4 w-4 rounded-full" />
+									</CardHeader>
+									<CardContent>
+										<Skeleton className="h-8 w-16" />
+									</CardContent>
+								</Card>
+							))}
+						</div>
+						<div className="space-y-4">
+							<Skeleton className="h-8 w-32" />
+							<div className="rounded-lg border border-border overflow-hidden">
+								<div className="space-y-2 p-4">
+									{[...Array(3)].map((_, i) => (
+										<Skeleton key={i} className="h-12 w-full" />
+									))}
+								</div>
+							</div>
+						</div>
+					</div>
+				</main>
+			</div>
+		);
+	}
+
 	if (!user) {
-		return <p>Cargando...</p>;
+		return (
+			<div className="flex justify-center items-center min-h-screen bg-background text-foreground">
+				<p className="text-lg">
+					No se pudo cargar el perfil. Por favor, intenta de nuevo más tarde.
+				</p>
+			</div>
+		);
 	}
 
 	return (
@@ -36,20 +93,20 @@ export default function Profile() {
 			<div className="min-h-screen bg-background text-foreground">
 				<main className="container mx-auto px-4 py-8">
 					<div className="max-w-5xl mx-auto space-y-8">
-						<div className="flex items-start gap-4">
-							<Avatar className="h-20 w-20">
+						<div className="flex items-center gap-6">
+							<Avatar className="h-24 w-24">
 								<AvatarImage src={user.avatarURL} alt={user.name} />
 								<AvatarFallback>
-									{user.email.charAt(0).toUpperCase()}
+									{user.name.charAt(0).toUpperCase()}
 								</AvatarFallback>
 							</Avatar>
 							<div>
-								<h1 className="text-3xl font-bold">{user.name}</h1>
-								<p className="text-muted-foreground">{user.email}</p>
+								<h1 className="text-4xl font-bold mb-2">{user.name}</h1>
+								<p className="text-xl text-muted-foreground">{user.email}</p>
 							</div>
 						</div>
 
-						<div className="grid gap-4 md:grid-cols-3">
+						<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
 							<Card>
 								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 									<CardTitle className="text-sm font-medium">
@@ -58,7 +115,9 @@ export default function Profile() {
 									<Trophy className="h-4 w-4 text-muted-foreground" />
 								</CardHeader>
 								<CardContent>
-									<div className="text-2xl font-bold">{stats?.total_races}</div>
+									<div className="text-2xl font-bold">
+										{stats?.total_races || 0}
+									</div>
 								</CardContent>
 							</Card>
 
@@ -67,10 +126,26 @@ export default function Profile() {
 									<CardTitle className="text-sm font-medium">
 										CPM más alto
 									</CardTitle>
+									<TrendingUp className="h-4 w-4 text-muted-foreground" />
+								</CardHeader>
+								<CardContent>
+									<div className="text-2xl font-bold">
+										{stats?.best_cpm || 0}
+									</div>
+								</CardContent>
+							</Card>
+
+							<Card>
+								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+									<CardTitle className="text-sm font-medium">
+										CPM promedio
+									</CardTitle>
 									<Activity className="h-4 w-4 text-muted-foreground" />
 								</CardHeader>
 								<CardContent>
-									<div className="text-2xl font-bold">{stats?.average_cpm}</div>
+									<div className="text-2xl font-bold">
+										{stats?.average_cpm || 0}
+									</div>
 								</CardContent>
 							</Card>
 
@@ -82,15 +157,17 @@ export default function Profile() {
 									<Clock className="h-4 w-4 text-muted-foreground" />
 								</CardHeader>
 								<CardContent>
-									<div className="text-2xl font-bold">{stats?.total_time}s</div>
+									<div className="text-2xl font-bold">
+										{stats?.total_time || 0}s
+									</div>
 								</CardContent>
 							</Card>
 						</div>
 
 						{/* Recent Races */}
 						<div className="space-y-4">
-							<h2 className="text-xl font-semibold">Mis carreras</h2>
-							<div className="rounded-lg border border-border">
+							<h2 className="text-2xl font-semibold">Mis carreras</h2>
+							<div className="rounded-lg border border-border overflow-hidden">
 								<div className="overflow-x-auto">
 									<table className="w-full">
 										<thead>
@@ -102,7 +179,7 @@ export default function Profile() {
 													CPM
 												</th>
 												<th className="text-left text-sm text-muted-foreground font-medium px-4 py-3">
-													Tiempo (s)
+													Tiempo
 												</th>
 												<th className="text-left text-sm text-muted-foreground font-medium px-4 py-3">
 													Lenguaje
@@ -110,24 +187,37 @@ export default function Profile() {
 											</tr>
 										</thead>
 										<tbody>
-											{races.map((race, index) => (
-												<tr
-													key={index}
-													className="border-b border-border bg-card/50 hover:bg-card/80 transition-colors"
-												>
-													<td className="px-4 py-3">{race.date}</td>
-													<td className="px-4 py-3">{race.cps}</td>
-													<td className="px-4 py-3">{race.time}</td>
-													<td className="px-4 py-3">
-														<div className="flex items-center gap-2">
-															<div className="h-6 w-6 flex items-center justify-center rounded bg-yellow-500/10 text-yellow-500 text-xs font-medium">
-																JS
+											{races.length > 0 ? (
+												races.map((race, index) => (
+													<tr
+														key={index}
+														className="border-b border-border bg-card/50 hover:bg-card/80 transition-colors"
+													>
+														<td className="px-4 py-3">
+															{new Date(race.completed_at).toLocaleDateString()}
+														</td>
+														<td className="px-4 py-3">{race.cpm}</td>
+														<td className="px-4 py-3">{race.time_elapsed}s</td>
+														<td className="px-4 py-3">
+															<div className="flex items-center gap-2">
+																<div className="h-6 w-6 flex items-center justify-center rounded bg-yellow-500/10 text-yellow-500 text-xs font-medium">
+																	{race.language.substring(0, 2).toUpperCase()}
+																</div>
+																<span>{race.language}</span>
 															</div>
-															<span>{race.language}</span>
-														</div>
+														</td>
+													</tr>
+												))
+											) : (
+												<tr>
+													<td
+														colSpan={4}
+														className="px-4 py-3 text-center text-muted-foreground"
+													>
+														No hay carreras recientes
 													</td>
 												</tr>
-											))}
+											)}
 										</tbody>
 									</table>
 								</div>

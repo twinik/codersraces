@@ -15,12 +15,13 @@ export interface CodeSnippet {
 
 export interface RaceResult {
 	id: string;
-	userId: string;
-	snippetId: string;
+	user_id: string;
+	snippet_id: string;
 	cpm: number;
 	accuracy: number;
-	timeElapsed: number;
-	completedAt: Date;
+	time_elapsed: number;
+	completed_at: Date;
+	language: string;
 }
 
 export interface UserStats {
@@ -28,14 +29,15 @@ export interface UserStats {
 	total_races: number;
 	total_time: number;
 	average_cpm: number;
+	best_cpm: number;
 	average_accuracy: number;
 }
 
 export interface UserLeaderboard {
-	userId: string;
+	user_id: string;
 	position: number;
-	averageCpm: number;
-	averageAccuracy: number;
-	racesCompleted: number;
-	principalLanguages: string[];
+	average_cpm: number;
+	average_accuracy: number;
+	races_completed: number;
+	principal_languages: string[];
 }
