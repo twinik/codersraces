@@ -3,7 +3,7 @@ import { UserLeaderboard } from "@/lib/types";
 
 export const getLeaderboard = async (
 	rows: number
-): Promise<UserLeaderboard[] | null> => {
+): Promise<UserLeaderboard[]> => {
 	const { data, error } = await supabase
 		.from("leaderboard_view") // Cambiamos 'user_stats' a 'leaderboard_view'
 		.select(
@@ -22,11 +22,11 @@ export const getLeaderboard = async (
 
 	if (error) {
 		console.error("Error fetching leaderboard data:", error.message);
-		return null;
+		return [];
 	}
 
 	if (!data || data.length === 0) {
-		return null;
+		return [];
 	}
 
 	const leaderboard = data.map((stat, index) => ({
