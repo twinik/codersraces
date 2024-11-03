@@ -1,10 +1,38 @@
 import { supabase } from "@/utils/supabase/client";
+import { UserSession } from "@/lib/types";
 
-export const fetchSession = async () => {
+export const fetchSessionMenu = async () => {
 	const {
 		data: { session },
+		error,
 	} = await supabase.auth.getSession();
+	if (error) {
+		console.error("Error fetching session:", error);
+		return null;
+	}
 	return session;
+};
+
+export const fetchSession = async (): Promise<UserSession | null> => {
+	const {
+		data: { session },
+		error,
+	} = await supabase.auth.getSession();
+	if (error || !session) {
+		console.error("Error fetching session:", error);
+		return null;
+	}
+
+	const user = session.user;
+
+	const userSession: UserSession = {
+		id: user.id,
+		avatarURL: user.user_metadata.avatar_url,
+		name: user.user_metadata.full_name,
+		email: user.email || "nomail@nomail.com",
+	};
+
+	return userSession;
 };
 
 export const onAuthStateChange = (callback: (session: any) => void) => {

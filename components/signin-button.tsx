@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import {
-	fetchSession,
+	fetchSessionMenu,
 	onAuthStateChange,
 	signInWithGitHub,
 	signOut,
@@ -23,7 +23,7 @@ export function SignInButton() {
 
 	useEffect(() => {
 		const getSession = async () => {
-			const sessionData = await fetchSession();
+			const sessionData = await fetchSessionMenu();
 			setSession(sessionData);
 		};
 

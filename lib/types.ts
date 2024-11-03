@@ -1,7 +1,8 @@
-export interface User {
+export interface UserSession {
 	id: string;
-	username: string;
+	avatarURL: string;
 	name: string;
+	email: string;
 }
 
 export interface CodeSnippet {
@@ -23,11 +24,11 @@ export interface RaceResult {
 }
 
 export interface UserStats {
-	userId: string;
-	totalRaces: number;
-	totalTime: number;
-	averageCpm: number;
-	averageAccuracy: number;
+	user_id: string;
+	total_races: number;
+	total_time: number;
+	average_cpm: number;
+	average_accuracy: number;
 }
 
 export interface UserLeaderboard {

@@ -9,8 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
 	title: "Coders Races",
-	description:
-		"Mejora tus habilidades de programación compitiendo en desafíos de código en tiempo real. Practica, compite y aprende con otros desarrolladores.",
+	description: "¿Qué tan rápido podes programar?",
 	icons: {
 		icon: "/favicon.ico",
 	},
