@@ -11,12 +11,6 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
 	Info,
 	ChevronFirst,
 	ChevronLast,
@@ -27,6 +21,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { UserLeaderboard } from "@/lib/types";
 import { IconLanguage } from "@/components/language-badge";
+import CPMTooltip from "./cpm-tooltip";
 
 export default function LeaderBoardTable({
 	data,
@@ -67,16 +62,7 @@ export default function LeaderBoardTable({
 								<th className="text-left text-sm text-muted-foreground font-medium px-4 py-3">
 									<div className="flex items-center gap-2">
 										CPM promedio
-										<TooltipProvider>
-											<Tooltip>
-												<TooltipTrigger>
-													<Info className="h-4 w-4" />
-												</TooltipTrigger>
-												<TooltipContent side="bottom">
-													<p>Carácteres por minuto</p>
-												</TooltipContent>
-											</Tooltip>
-										</TooltipProvider>
+										<CPMTooltip />
 									</div>
 								</th>
 								<th className="text-left text-sm text-muted-foreground font-medium px-4 py-3">
