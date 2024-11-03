@@ -5,24 +5,38 @@ export const getLeaderboard = async (
 	rows: number
 ): Promise<UserLeaderboard[] | null> => {
 	const { data, error } = await supabase
-		.from("user_stats")
+		.from("leaderboard_view") // Cambiamos 'user_stats' a 'leaderboard_view'
 		.select(
-			"user_id, average_cpm, average_accuracy, races_completed, principal_language"
+			`
+            user_id,
+            average_cpm,
+            average_accuracy,
+            total_races,
+            principal_language,
+            avatar_url,
+            full_name
+            `
 		)
 		.order("average_cpm", { ascending: false })
 		.limit(rows);
 
 	if (error) {
-		console.error("Error fetching leaderboard data:", error);
+		console.error("Error fetching leaderboard data:", error.message);
 		return null;
 	}
 
-	if (!data) {
+	if (!data || data.length === 0) {
 		return null;
 	}
 
-	const leaderboard = data.map((user, index) => ({
-		...user,
+	const leaderboard = data.map((stat, index) => ({
+		user_id: stat.user_id,
+		avatarURL: stat.avatar_url || "",
+		name: stat.full_name || "",
+		average_cpm: stat.average_cpm,
+		average_accuracy: stat.average_accuracy,
+		total_races: stat.total_races,
+		principal_language: stat.principal_language,
 		position: index + 1,
 	}));
 

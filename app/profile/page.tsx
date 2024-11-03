@@ -45,10 +45,12 @@ export default function Profile() {
 					<div className="max-w-5xl mx-auto space-y-8">
 						<div className="flex items-start gap-6">
 							<Skeleton className="h-24 w-24 rounded-full" />
-							<div className="space-y-2">
-								<Skeleton className="h-8 w-48" />
-								<Skeleton className="h-4 w-32" />
-								<Skeleton className="h-6 w-24" />
+							<div className="space-y-2 flex-grow">
+								<div className="flex items-center space-x-2">
+									<Skeleton className="h-8 w-48" />
+									<Skeleton className="h-6 w-32" />
+								</div>
+								<Skeleton className="h-6 w-40" />
 							</div>
 						</div>
 						<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -102,11 +104,17 @@ export default function Profile() {
 									{user.name.charAt(0).toUpperCase()}
 								</AvatarFallback>
 							</Avatar>
-							<div className="space-y-2">
-								<h1 className="text-4xl font-bold">{user.name}</h1>
-								<p className="text-xl text-muted-foreground">{user.email}</p>
+							<div className="flex flex-col">
+								<div className="flex items-end space-x-2">
+									<h1 className="text-3xl font-bold">{user.name}</h1>
+									<p className="text-xl text-muted-foreground">
+										{user.username}
+									</p>
+								</div>
 								{stats?.principal_language && (
-									<LanguageBadge language={stats.principal_language} />
+									<div className="mt-2 max-w-[200px]">
+										<LanguageBadge language={stats.principal_language} />
+									</div>
 								)}
 							</div>
 						</div>

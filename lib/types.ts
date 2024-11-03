@@ -2,6 +2,7 @@ export interface UserSession {
 	id: string;
 	avatarURL: string;
 	name: string;
+	username: string;
 	email: string;
 }
 
@@ -36,8 +37,10 @@ export interface UserStats {
 
 export interface UserLeaderboard {
 	user_id: string;
+	avatarURL: string;
+	name: string;
 	average_cpm: number;
 	average_accuracy: number;
-	races_completed: number;
+	total_races: number;
 	principal_language: string;
 }

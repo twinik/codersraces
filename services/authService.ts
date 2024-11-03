@@ -28,7 +28,8 @@ export const fetchSession = async (): Promise<UserSession | null> => {
 	const userSession: UserSession = {
 		id: user.id,
 		avatarURL: user.user_metadata.avatar_url,
-		name: user.user_metadata.full_name,
+		name: user.user_metadata.name,
+		username: user.user_metadata.user_name,
 		email: user.email || "nomail@nomail.com",
 	};
 

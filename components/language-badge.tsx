@@ -62,5 +62,10 @@ export const LanguageBadge: React.FC<LanguageBadgeProps> = ({ language }) => {
 };
 
 export const IconLanguage: React.FC<LanguageBadgeProps> = ({ language }) => {
-	return <LanguageIcon language={language} className="w-6 h-6" />;
+	return (
+		<div className="flex row gap-2">
+			<LanguageIcon language={language} className="w-6 h-6" />
+			{language}
+		</div>
+	);
 };

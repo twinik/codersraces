@@ -25,8 +25,14 @@ import {
 	Medal,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { UserLeaderboard } from "@/lib/types";
+import { IconLanguage } from "@/components/language-badge";
 
-export default function LeaderBoardTable({ data }: { data: any[] }) {
+export default function LeaderBoardTable({
+	data,
+}: {
+	data: UserLeaderboard[];
+}) {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -80,7 +86,7 @@ export default function LeaderBoardTable({ data }: { data: any[] }) {
 									Carreras jugadas
 								</th>
 								<th className="text-left text-sm text-muted-foreground font-medium px-4 py-3">
-									Lenguajes principales
+									Lenguaje preferido
 								</th>
 							</tr>
 						</thead>
@@ -94,7 +100,7 @@ export default function LeaderBoardTable({ data }: { data: any[] }) {
 							>
 								{paginatedData.map((entry, index) => (
 									<motion.tr
-										key={entry.rank}
+										key={index}
 										className="border-b border-border bg-card/50 hover:bg-card/80 transition-colors"
 										initial={{ opacity: 0, y: 20 }}
 										animate={{ opacity: 1, y: 0 }}
@@ -102,19 +108,19 @@ export default function LeaderBoardTable({ data }: { data: any[] }) {
 									>
 										<td className="px-4 py-3">
 											<div className="flex items-center gap-2">
-												{entry.rank <= 3 ? (
+												{index + 1 <= 3 ? (
 													<Medal
 														className={`h-5 w-5 ${
-															entry.rank === 1
+															index + 1 === 1
 																? "text-yellow-500"
-																: entry.rank === 2
+																: index + 1 === 2
 																? "text-gray-400"
 																: "text-amber-700"
 														}`}
 													/>
 												) : (
 													<span className="text-muted-foreground">
-														{entry.rank}º
+														{index}º
 													</span>
 												)}
 											</div>
@@ -122,30 +128,27 @@ export default function LeaderBoardTable({ data }: { data: any[] }) {
 										<td className="px-4 py-3">
 											<div className="flex items-center gap-2">
 												<Avatar className="h-8 w-8">
-													<AvatarImage
-														src={entry.user.image}
-														alt={entry.user.name}
-													/>
+													<AvatarImage src={entry.avatarURL} alt={entry.name} />
 													<AvatarFallback>
-														{entry.user.name.charAt(0)}
+														{entry.name.charAt(0)}
 													</AvatarFallback>
 												</Avatar>
-												<span>{entry.user.name}</span>
+												<span>{entry.name}</span>
 											</div>
 										</td>
 										<td className="px-4 py-3">
-											{entry.averageCpm.toLocaleString("es-ES", {
+											{entry.average_cpm.toLocaleString("es-ES", {
 												maximumFractionDigits: 2,
 											})}
 										</td>
 										<td className="px-4 py-3">
-											<span className="text-green-500">{entry.accuracy}%</span>
+											<span className="text-green-500">
+												{entry.average_accuracy}%
+											</span>
 										</td>
-										<td className="px-4 py-3">{entry.racesPlayed}</td>
+										<td className="px-4 py-3">{entry.total_races}</td>
 										<td className="px-4 py-3">
-											{entry.languages.length > 0
-												? entry.languages.join(", ")
-												: "---"}
+											<IconLanguage language={entry.principal_language} />
 										</td>
 									</motion.tr>
 								))}
