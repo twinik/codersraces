@@ -112,9 +112,13 @@ export default function Profile() {
 										{user.username}
 									</p>
 								</div>
-								{stats?.principal_language && (
+								{stats?.principal_language ? (
 									<div className="mt-2 max-w-[200px]">
 										<LanguageBadge language={stats.principal_language} />
+									</div>
+								) : (
+									<div className="mt-2 max-w-[200px]">
+										<LanguageBadge language="Sin información" />
 									</div>
 								)}
 							</div>

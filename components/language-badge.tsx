@@ -52,11 +52,11 @@ export const LanguageBadge: React.FC<LanguageBadgeProps> = ({ language }) => {
 		<Badge
 			className={`w-full bg-gradient-to-r ${gradientColors} text-white px-3 py-1.5 text-sm font-medium rounded-md flex items-center justify-between transition-all duration-300 hover:shadow-md hover:scale-105`}
 		>
-			<span className="flex-grow text-left">{language}</span>
 			<LanguageIcon
 				language={language}
-				className="w-5 h-5 ml-2 flex-shrink-0"
+				className="w-5 h-5 mr-2 flex-shrink-0"
 			/>
+			<span className="flex-grow text-left">{language}</span>
 		</Badge>
 	);
 };
