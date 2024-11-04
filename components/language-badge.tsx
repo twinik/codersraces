@@ -6,6 +6,8 @@ import {
 	BiLogoPython,
 	BiLogoJava,
 	BiLogoPhp,
+	BiLogoCPlusPlus,
+	BiLogoGoLang,
 	BiCodeAlt,
 } from "react-icons/bi";
 
@@ -20,7 +22,8 @@ const languageColors: Record<string, string> = {
 	Python: "from-green-500 to-green-600",
 	Java: "from-red-500 to-red-600",
 	PHP: "from-indigo-500 to-indigo-600",
-	// Add more languages and their corresponding colors as needed
+	"C++": "from-pink-500 to-pink-600",
+	Go: "from-blue-500 to-blue-600",
 };
 
 const LanguageIcon: React.FC<LanguageIconProps> = ({ language, className }) => {
@@ -35,6 +38,10 @@ const LanguageIcon: React.FC<LanguageIconProps> = ({ language, className }) => {
 			return <BiLogoJava className={className} />;
 		case "php":
 			return <BiLogoPhp className={className} />;
+		case "c++":
+			return <BiLogoCPlusPlus className={className} />;
+		case "go":
+			return <BiLogoGoLang className={className} />;
 		default:
 			return <BiCodeAlt className={className} />;
 	}
