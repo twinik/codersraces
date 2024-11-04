@@ -17,13 +17,13 @@ type LanguageIconProps = {
 };
 
 const languageColors: Record<string, string> = {
-	JavaScript: "from-yellow-500 to-yellow-600",
-	TypeScript: "from-blue-500 to-blue-600",
-	Python: "from-green-500 to-green-600",
-	Java: "from-red-500 to-red-600",
-	PHP: "from-indigo-500 to-indigo-600",
-	"C++": "from-pink-500 to-pink-600",
-	Go: "from-blue-500 to-blue-600",
+	JavaScript: "from-yellow-400 to-yellow-500",
+	TypeScript: "from-blue-400 to-blue-500",
+	Python: "from-blue-400 to-yellow-500",
+	Java: "from-red-400 to-red-500",
+	PHP: "from-indigo-400 to-indigo-500",
+	"C++": "from-purple-400 to-purple-500",
+	Go: "from-teal-400 to-teal-500",
 };
 
 const LanguageIcon: React.FC<LanguageIconProps> = ({ language, className }) => {
