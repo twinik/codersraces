@@ -52,7 +52,7 @@ function CodeSnippetLoader() {
 
 	return (
 		<CodeRace
-			codeSnippet={codeSnippet.code}
+			codeSnippet={codeSnippet}
 			mode={searchParams.get("mode") as "practice" | "competitive"}
 		/>
 	);

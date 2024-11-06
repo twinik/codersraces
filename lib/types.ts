@@ -26,13 +26,11 @@ export enum ProgrammingLanguage {
 }
 
 export interface RaceResult {
-	id: string;
 	user_id: string;
 	snippet_id: string;
 	cpm: number;
 	accuracy: number;
 	time_elapsed: number;
-	completed_at: Date;
 	language: string;
 }
 

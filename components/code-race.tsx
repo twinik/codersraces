@@ -1,15 +1,21 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Progress } from "@/components/ui/progress";
-import { Card } from "@/components/ui/card";
-import { formatCodeSnippet } from "@/services/gameService";
 import { CornerDownLeft } from "lucide-react";
 import confetti from "canvas-confetti";
 import { motion } from "framer-motion";
+import { Progress } from "@/components/ui/progress";
+import { Card } from "@/components/ui/card";
+import { fetchSession } from "@/services/authService";
+import {
+	formatCodeSnippet,
+	registerRaceResult,
+	updateUserStats,
+} from "@/services/gameService";
+import { CodeSnippet } from "@/lib/types";
 
 interface CodeRaceProps {
-	codeSnippet: string;
+	codeSnippet: CodeSnippet;
 	mode: "practice" | "competitive";
 }
 
@@ -24,7 +30,7 @@ export function CodeRace({ codeSnippet, mode }: CodeRaceProps) {
 	const [isCompleted, setIsCompleted] = useState(false);
 	const [shake, setShake] = useState(false);
 	const inputRef = useRef<HTMLTextAreaElement>(null);
-	const formattedCode = formatCodeSnippet(codeSnippet);
+	const formattedCode = formatCodeSnippet(codeSnippet.code);
 
 	useEffect(() => {
 		if (inputRef.current) {
@@ -94,7 +100,7 @@ export function CodeRace({ codeSnippet, mode }: CodeRaceProps) {
 				setCursorPosition((prevPos) => prevPos - 1);
 			}
 		} else if (e.ctrlKey || e.metaKey) {
-			e.preventDefault(); // Prevent copy/paste and other shortcuts
+			e.preventDefault();
 		} else if (e.key === " ") {
 			e.preventDefault();
 			if (formattedCode[cursorPosition] === " ") {
@@ -104,14 +110,32 @@ export function CodeRace({ codeSnippet, mode }: CodeRaceProps) {
 		}
 	};
 
-	const handleCompletion = () => {
-		setIsRunning(false);
-		setIsCompleted(true);
-		confetti({
-			particleCount: 100,
-			spread: 70,
-			origin: { y: 0.6 },
-		});
+	const handleCompletion = async () => {
+		const userSession = await fetchSession();
+		try {
+			setIsRunning(false);
+			setIsCompleted(true);
+			if (mode === "competitive" && userSession) {
+				const raceResult = {
+					user_id: userSession.id,
+					snippet_id: codeSnippet.id,
+					cpm,
+					accuracy,
+					time_elapsed: time,
+					language: codeSnippet.language,
+				};
+				await registerRaceResult(raceResult);
+				await updateUserStats(raceResult);
+			}
+			confetti({
+				particleCount: 100,
+				spread: 70,
+				origin: { y: 0.6 },
+			});
+		} catch (error) {
+			console.error("Error during race completion:", error);
+			alert(`Error al completar la carrera: ${(error as Error).message}`);
+		}
 	};
 
 	const getProgress = () => {
