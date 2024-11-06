@@ -5,6 +5,7 @@ import Atropos from "atropos/react";
 
 export function CodePreview() {
 	const [text, setText] = useState("");
+	const [cursorPosition, setCursorPosition] = useState(0);
 	const exampleText = `function fibonacci(n) {
   if (n <= 1) return n;
   let a = 0, b = 1;
@@ -21,11 +22,13 @@ export function CodePreview() {
 		const typingEffect = setInterval(() => {
 			if (i < exampleText.length) {
 				setText(exampleText.slice(0, i + 1));
+				setCursorPosition(i + 1);
 				i++;
 			} else {
 				clearInterval(typingEffect);
 				setTimeout(() => {
 					setText("");
+					setCursorPosition(0);
 				}, 2000); // Espera 2 segundos antes de reiniciar
 			}
 		}, 150);
@@ -45,7 +48,16 @@ export function CodePreview() {
 					<pre className="text-muted-foreground relative">
 						<code className="block opacity-30">{exampleText}</code>
 						<code className="block absolute top-0 left-0 overflow-hidden whitespace-pre text-foreground">
-							{text}
+							{text.split("").map((char, index) => (
+								<span key={index}>
+									{char}
+									{index === cursorPosition - 1 && (
+										<span className="border-l-2 border-foreground ml-[-1px] animate-blink">
+											&nbsp;
+										</span>
+									)}
+								</span>
+							))}
 						</code>
 					</pre>
 				</div>

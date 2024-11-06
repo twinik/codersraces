@@ -9,9 +9,20 @@ export interface UserSession {
 export interface CodeSnippet {
 	id: string;
 	title: string;
-	language: string;
+	language: ProgrammingLanguage;
 	code: string;
-	difficulty: "easy" | "medium" | "hard";
+	mode: string;
+}
+
+export enum ProgrammingLanguage {
+	Java = "Java",
+	JavaScript = "JavaScript",
+	TypeScript = "TypeScript",
+	PHP = "PHP",
+	Rust = "Rust",
+	Python = "Python",
+	Cpp = "C++",
+	Go = "Go",
 }
 
 export interface RaceResult {
