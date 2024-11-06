@@ -142,7 +142,15 @@ export default function LeaderBoardTable() {
 										})}
 									</td>
 									<td className="px-4 py-3">
-										<span className="text-green-500">
+										<span
+											className={
+												entry.average_accuracy >= 80
+													? "text-green-500"
+													: entry.average_accuracy >= 50
+													? "text-yellow-500"
+													: "text-red-500"
+											}
+										>
 											{entry.average_accuracy}%
 										</span>
 									</td>

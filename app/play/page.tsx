@@ -172,8 +172,8 @@ export default function Play() {
 						<CardHeader>
 							<CardTitle>Competir</CardTitle>
 							<CardDescription>
-								Compite y pon a prueba tus habilidades, cada partida se guardará
-								en tu perfil.
+								Compite y pon a prueba tus habilidades, cada carrera contará
+								para la clasificación.
 							</CardDescription>
 						</CardHeader>
 						<CardContent className="flex-1 flex flex-col justify-between">

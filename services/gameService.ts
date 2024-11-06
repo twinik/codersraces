@@ -87,29 +87,45 @@ export const registerRaceResult = async (result: RaceResult) => {
 	const { error } = await supabase.from("race_results").insert(result);
 
 	if (error) {
-		console.error("Error registering race result:", error);
+		console.error(
+			"Error registering race result:",
+			error.message,
+			error.details,
+			error.hint
+		);
 		throw new Error("Failed to register race result");
 	}
 };
 
-export const updateUserStats = async (result: RaceResult) => {
-	if (!result.user_id) {
-		throw new Error("User ID is required to update stats");
-	}
-
-	const { data: currentStats, error: fetchError } = await supabase
+async function fetchCurrentStats(user_id: string): Promise<UserStats | null> {
+	const { data, error } = await supabase
 		.from("user_stats")
 		.select("*")
-		.eq("user_id", result.user_id)
-		.single();
+		.eq("user_id", user_id);
 
-	if (fetchError) {
-		console.error("Error fetching user stats:", fetchError);
-		return;
+	if (error) {
+		console.error("Error al obtener estadísticas del usuario:", error.message);
+		throw new Error("Error al obtener estadísticas del usuario");
 	}
 
-	let updatedStats: UserStats;
+	if (!data || data.length === 0) {
+		console.warn(`No se encontraron estadísticas para el usuario: ${user_id}`);
+		return null;
+	}
 
+	if (data.length > 1) {
+		console.warn(
+			`Se encontraron múltiples registros de estadísticas para el usuario: ${user_id}. Usando el primero.`
+		);
+	}
+
+	return data[0] as UserStats;
+}
+
+function calculateUpdatedStats(
+	currentStats: UserStats | null,
+	result: RaceResult
+): UserStats {
 	if (currentStats) {
 		const totalRaces = currentStats.total_races + 1;
 		const totalTime = currentStats.total_time + result.time_elapsed;
@@ -122,7 +138,7 @@ export const updateUserStats = async (result: RaceResult) => {
 				result.accuracy) /
 			totalRaces;
 
-		updatedStats = {
+		return {
 			user_id: result.user_id,
 			total_races: totalRaces,
 			total_time: totalTime,
@@ -131,23 +147,42 @@ export const updateUserStats = async (result: RaceResult) => {
 			average_accuracy: averageAccuracy,
 			principal_language: result.language,
 		};
-	} else {
-		updatedStats = {
-			user_id: result.user_id,
-			total_races: 1,
-			total_time: result.time_elapsed,
-			average_cpm: result.cpm,
-			best_cpm: result.cpm,
-			average_accuracy: result.accuracy,
-			principal_language: result.language,
-		};
 	}
 
-	const { error: updateError } = await supabase
-		.from("user_stats")
-		.upsert(updatedStats);
+	return {
+		user_id: result.user_id,
+		total_races: 1,
+		total_time: result.time_elapsed,
+		average_cpm: result.cpm,
+		best_cpm: result.cpm,
+		average_accuracy: result.accuracy,
+		principal_language: result.language,
+	};
+}
 
-	if (updateError) {
-		console.error("Error updating user stats:", updateError);
+async function saveUserStats(updatedStats: UserStats) {
+	const { error } = await supabase.from("user_stats").upsert(updatedStats);
+
+	if (error) {
+		console.error("Error al guardar estadísticas del usuario:", error.message);
+		throw new Error("Error al guardar estadísticas del usuario");
+	}
+}
+
+export const updateUserStats = async (result: RaceResult) => {
+	if (!result.user_id) {
+		throw new Error(
+			"Se requiere un ID de usuario para actualizar las estadísticas"
+		);
+	}
+
+	try {
+		const currentStats = await fetchCurrentStats(result.user_id);
+		const updatedStats = calculateUpdatedStats(currentStats, result);
+		await saveUserStats(updatedStats);
+		console.log("Estadísticas del usuario actualizadas exitosamente.");
+	} catch (error) {
+		console.error("Error al actualizar estadísticas del usuario:", error);
+		throw error;
 	}
 };

@@ -217,7 +217,9 @@ export default function Profile() {
 															{new Date(race.completed_at).toLocaleDateString()}
 														</td>
 														<td className="px-4 py-3">{race.cpm}</td>
-														<td className="px-4 py-3">{race.time_elapsed}s</td>
+														<td className="px-4 py-3">
+															{parseFloat(race.time_elapsed.toFixed(1))}s
+														</td>
 														<td className="px-4 py-3">
 															<IconLanguage language={race.language} />
 														</td>
