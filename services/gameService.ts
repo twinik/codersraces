@@ -30,7 +30,6 @@ export const getCodeSnippetPractice = async (
 		return codeSnippetNull;
 	}
 
-	// Selecciona un snippet aleatorio desde los resultados obtenidos
 	const randomIndex = Math.floor(Math.random() * data.length);
 	return data[randomIndex] as CodeSnippet;
 };
@@ -56,7 +55,21 @@ export const getCodeSnippetCompetitive = async (
 		return codeSnippetNull;
 	}
 
-	// Selecciona un snippet aleatorio desde los resultados obtenidos
 	const randomIndex = Math.floor(Math.random() * data.length);
 	return data[randomIndex] as CodeSnippet;
+};
+
+export const getCodeSnippetById = async (id: string): Promise<CodeSnippet> => {
+	const { data, error } = await supabase
+		.from("code_snippets")
+		.select("*")
+		.eq("id", id)
+		.single();
+
+	if (error) {
+		console.error("Error fetching code snippet:", error);
+		throw new Error("Failed to fetch code snippet");
+	}
+
+	return data as CodeSnippet;
 };

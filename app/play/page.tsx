@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -26,6 +27,7 @@ import {
 import { CodeSnippet, ProgrammingLanguage } from "@/lib/types";
 
 export default function Play() {
+	const router = useRouter();
 	const [languages, setLanguages] = useState<string[]>([]);
 	const [practiceLanguage, setPracticeLanguage] = useState<
 		ProgrammingLanguage | ""
@@ -80,6 +82,20 @@ export default function Play() {
 			fetchCompetitiveSnippet(competitiveLanguage as ProgrammingLanguage);
 		}
 	}, [competitiveLanguage]);
+
+	const handleStartPractice = () => {
+		if (practiceSnippet) {
+			router.push(`/play/race?mode=practice&snippetId=${practiceSnippet.id}`);
+		}
+	};
+
+	const handleStartCompetitive = () => {
+		if (competitiveSnippet) {
+			router.push(
+				`/play/race?mode=competitive&snippetId=${competitiveSnippet.id}`
+			);
+		}
+	};
 
 	return (
 		<main className="flex-grow container mx-auto px-4 py-8">
@@ -142,12 +158,7 @@ export default function Play() {
 									<Button
 										className="w-full md:w-auto md:ml-auto"
 										disabled={!practiceLanguage || isLoadingPractice}
-										onClick={() =>
-											practiceLanguage &&
-											fetchPracticeSnippet(
-												practiceLanguage as ProgrammingLanguage
-											)
-										}
+										onClick={handleStartPractice}
 									>
 										Comenzar
 									</Button>
@@ -203,12 +214,7 @@ export default function Play() {
 									<Button
 										className="w-full md:w-auto md:ml-auto"
 										disabled={!competitiveLanguage || isLoadingCompetitive}
-										onClick={() =>
-											competitiveLanguage &&
-											fetchCompetitiveSnippet(
-												competitiveLanguage as ProgrammingLanguage
-											)
-										}
+										onClick={handleStartCompetitive}
 									>
 										Comenzar
 									</Button>
