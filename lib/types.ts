@@ -31,6 +31,7 @@ export interface RaceResult {
 	cpm: number;
 	accuracy: number;
 	time_elapsed: number;
+	completed_at: Date;
 	language: string;
 }
 

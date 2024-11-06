@@ -123,6 +123,7 @@ export function CodeRace({ codeSnippet, mode }: CodeRaceProps) {
 					accuracy,
 					time_elapsed: time,
 					language: codeSnippet.language,
+					completed_at: new Date(),
 				};
 				await registerRaceResult(raceResult);
 				await updateUserStats(raceResult);
