@@ -216,7 +216,17 @@ export function CodeRace({ codeSnippet, mode }: CodeRaceProps) {
 
 					<div className="min-w-[100px] p-3 bg-background rounded-lg border">
 						<div className="text-xs text-muted-foreground mb-1">Precisión</div>
-						<div className="font-mono text-lg">{accuracy}%</div>
+						<div
+							className={`font-mono text-lg ${
+								accuracy >= 80
+									? "text-green-500"
+									: accuracy >= 50
+									? "text-yellow-500"
+									: "text-red-500"
+							}`}
+						>
+							{accuracy}%
+						</div>
 					</div>
 				</div>
 
