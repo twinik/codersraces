@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { CodeRace } from "@/components/code-race";
 import { getCodeSnippetById } from "@/services/gameService";
 import { CodeSnippet } from "@/lib/types";
 import { Loader2 } from "lucide-react";
 
-export default function Race() {
+function CodeSnippetLoader() {
 	const searchParams = useSearchParams();
 	const [codeSnippet, setCodeSnippet] = useState<CodeSnippet | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
@@ -55,5 +55,19 @@ export default function Race() {
 			codeSnippet={codeSnippet.code}
 			mode={searchParams.get("mode") as "practice" | "competitive"}
 		/>
+	);
+}
+
+export default function Race() {
+	return (
+		<Suspense
+			fallback={
+				<div className="flex items-center justify-center h-screen">
+					<Loader2 className="w-8 h-8 animate-spin text-primary" />
+				</div>
+			}
+		>
+			<CodeSnippetLoader />
+		</Suspense>
 	);
 }

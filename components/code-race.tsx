@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
 import { formatCodeSnippet } from "@/services/gameService";
-import { ArrowLeft } from "lucide-react";
+import { CornerDownLeft } from "lucide-react";
 import confetti from "canvas-confetti";
 import { motion } from "framer-motion";
 
@@ -123,7 +123,7 @@ export function CodeRace({ codeSnippet, mode }: CodeRaceProps) {
 			<div key={index} className="flex items-center">
 				<span>{line}</span>
 				{index < formattedCode.split("\n").length - 1 && (
-					<ArrowLeft className="ml-2 text-muted-foreground" size={16} />
+					<CornerDownLeft className="ml-2 text-muted-foreground" size={16} />
 				)}
 			</div>
 		));
@@ -133,9 +133,11 @@ export function CodeRace({ codeSnippet, mode }: CodeRaceProps) {
 		return (
 			<div className="w-full max-w-4xl mx-auto p-6">
 				<Card className="p-6">
-					<h2 className="text-2xl font-bold mb-4">
-						¡Felicidades! Has completado el desafío
-					</h2>
+					<h2 className="text-2xl font-bold">¡Felicidades!</h2>
+					<p className="text-muted-foreground mb-5">
+						Completaste la carrera de código con éxito. Aca tenés tus
+						estadísticas:
+					</p>
 					<div className="grid grid-cols-2 gap-4">
 						<div>
 							<p className="font-semibold">Tiempo:</p>
@@ -160,7 +162,7 @@ export function CodeRace({ codeSnippet, mode }: CodeRaceProps) {
 	}
 
 	return (
-		<div className="w-full max-w-4xl mx-auto p-6">
+		<div className="w-full max-w-6xl mx-auto p-6">
 			<div className="space-y-6">
 				<div>
 					<h1 className="text-2xl font-bold text-foreground">
