@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import confetti from "canvas-confetti";
+import { Progress } from "@/components/ui/progress";
+import { Card } from "@/components/ui/card";
 import { formatCodeSnippet } from "@/services/gameService";
+import { ArrowLeft } from "lucide-react";
+import confetti from "canvas-confetti";
+import { motion } from "framer-motion";
 
 interface CodeRaceProps {
 	codeSnippet: string;
@@ -15,37 +17,60 @@ export function CodeRace({ codeSnippet, mode }: CodeRaceProps) {
 	const [time, setTime] = useState(0);
 	const [isRunning, setIsRunning] = useState(false);
 	const [userInput, setUserInput] = useState("");
+	const [cpm, setCpm] = useState(0);
+	const [accuracy, setAccuracy] = useState(100);
+	const [cursorPosition, setCursorPosition] = useState(0);
 	const [errors, setErrors] = useState(0);
 	const [isCompleted, setIsCompleted] = useState(false);
-	const textareaRef = useRef<HTMLTextAreaElement>(null);
+	const [shake, setShake] = useState(false);
+	const inputRef = useRef<HTMLTextAreaElement>(null);
 	const formattedCode = formatCodeSnippet(codeSnippet);
 
 	useEffect(() => {
+		if (inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, []);
+
+	useEffect(() => {
 		let interval: NodeJS.Timeout;
-		if (isRunning && !isCompleted) {
+		if (isRunning) {
 			interval = setInterval(() => {
-				setTime((prevTime) => prevTime + 1);
-			}, 1000);
+				setTime((prevTime) => {
+					const newTime = prevTime + 0.1;
+					setCpm(Math.round((userInput.length / newTime) * 60));
+					return newTime;
+				});
+			}, 100);
 		}
 		return () => clearInterval(interval);
-	}, [isRunning, isCompleted]);
+	}, [isRunning, userInput.length]);
 
-	const handleStart = () => {
-		setIsRunning(true);
-		if (textareaRef.current) {
-			textareaRef.current.focus();
+	useEffect(() => {
+		if (userInput.length > 0) {
+			const totalChars = userInput.length;
+			setAccuracy(Math.round((totalChars / (totalChars + errors)) * 100));
+		} else {
+			setAccuracy(100);
 		}
-	};
+	}, [userInput, errors]);
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		const input = e.target.value;
+		if (!isRunning) {
+			setIsRunning(true);
+		}
+
 		if (input.length <= formattedCode.length) {
-			for (let i = 0; i < input.length; i++) {
-				if (input[i] !== formattedCode[i]) {
-					return; // Prevent typing incorrect character
-				}
+			if (input[input.length - 1] !== formattedCode[input.length - 1]) {
+				setShake(true);
+				setErrors((prev) => prev + 1);
+				setTimeout(() => setShake(false), 500);
+				return;
 			}
 			setUserInput(input);
+			setCursorPosition(input.length);
+
 			if (input === formattedCode) {
 				handleCompletion();
 			}
@@ -53,22 +78,35 @@ export function CodeRace({ codeSnippet, mode }: CodeRaceProps) {
 	};
 
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-		if (e.key === "Backspace" || e.key === "Delete") {
-			return; // Allow deleting
-		}
-		if (e.key.length === 1) {
-			// Single character keys
-			const nextChar = formattedCode[userInput.length];
-			if (e.key !== nextChar) {
-				e.preventDefault();
-				setErrors((prevErrors) => prevErrors + 1);
+		if (e.key === "Enter") {
+			e.preventDefault();
+			const nextNewlineIndex = formattedCode.indexOf("\n", cursorPosition);
+			if (nextNewlineIndex !== -1 && nextNewlineIndex === cursorPosition) {
+				const match = formattedCode.slice(cursorPosition + 1).match(/^\s*/);
+				const spacesToAdd = match ? match[0] : "";
+				setUserInput((prevInput) => prevInput + "\n" + spacesToAdd);
+				setCursorPosition((prevPos) => prevPos + 1 + spacesToAdd.length);
+			}
+		} else if (e.key === "Backspace") {
+			e.preventDefault();
+			if (userInput.length > 0) {
+				setUserInput((prevInput) => prevInput.slice(0, -1));
+				setCursorPosition((prevPos) => prevPos - 1);
+			}
+		} else if (e.ctrlKey || e.metaKey) {
+			e.preventDefault(); // Prevent copy/paste and other shortcuts
+		} else if (e.key === " ") {
+			e.preventDefault();
+			if (formattedCode[cursorPosition] === " ") {
+				setUserInput((prevInput) => prevInput + " ");
+				setCursorPosition((prevPos) => prevPos + 1);
 			}
 		}
 	};
 
 	const handleCompletion = () => {
-		setIsCompleted(true);
 		setIsRunning(false);
+		setIsCompleted(true);
 		confetti({
 			particleCount: 100,
 			spread: 70,
@@ -76,66 +114,135 @@ export function CodeRace({ codeSnippet, mode }: CodeRaceProps) {
 		});
 	};
 
-	const formatTime = (seconds: number) => {
-		const mins = Math.floor(seconds / 60);
-		const secs = seconds % 60;
-		return `${mins.toString().padStart(2, "0")}:${secs
-			.toString()
-			.padStart(2, "0")}`;
+	const getProgress = () => {
+		return (userInput.length / formattedCode.length) * 100;
 	};
 
-	const calculateWPM = () => {
-		const words = formattedCode.trim().split(/\s+/).length;
-		const minutes = time / 60;
-		return Math.round(words / minutes);
+	const renderCodeWithIcons = () => {
+		return formattedCode.split("\n").map((line, index) => (
+			<div key={index} className="flex items-center">
+				<span>{line}</span>
+				{index < formattedCode.split("\n").length - 1 && (
+					<ArrowLeft className="ml-2 text-muted-foreground" size={16} />
+				)}
+			</div>
+		));
 	};
 
-	const calculateAccuracy = () => {
-		const totalCharacters = formattedCode.length;
-		const correctCharacters = totalCharacters - errors;
-		return Math.round((correctCharacters / totalCharacters) * 100);
-	};
+	if (isCompleted) {
+		return (
+			<div className="w-full max-w-4xl mx-auto p-6">
+				<Card className="p-6">
+					<h2 className="text-2xl font-bold mb-4">
+						¡Felicidades! Has completado el desafío
+					</h2>
+					<div className="grid grid-cols-2 gap-4">
+						<div>
+							<p className="font-semibold">Tiempo:</p>
+							<p>{time.toFixed(1)} segundos</p>
+						</div>
+						<div>
+							<p className="font-semibold">CPM:</p>
+							<p>{cpm}</p>
+						</div>
+						<div>
+							<p className="font-semibold">Precisión:</p>
+							<p>{accuracy}%</p>
+						</div>
+						<div>
+							<p className="font-semibold">Errores:</p>
+							<p>{errors}</p>
+						</div>
+					</div>
+				</Card>
+			</div>
+		);
+	}
 
 	return (
-		<div className="container mx-auto px-4 py-8">
-			<Card className="bg-card border-border">
-				<CardContent className="p-6">
-					<div className="flex justify-between items-center mb-4">
-						<h2 className="text-2xl font-bold">
-							{mode === "practice" ? "Practice Mode" : "Competitive Mode"}
-						</h2>
-						<div className="text-xl font-mono">{formatTime(time)}</div>
+		<div className="w-full max-w-4xl mx-auto p-6">
+			<div className="space-y-6">
+				<div>
+					<h1 className="text-2xl font-bold text-foreground">
+						¡Escribe el código!
+					</h1>
+					<p className="text-sm text-muted-foreground">
+						Comienza a escribir, no presiones el mouse
+					</p>
+				</div>
+
+				<div className="grid gap-4 md:grid-cols-[1fr_auto_auto_auto]">
+					<div className="space-y-1.5">
+						<label className="text-sm font-medium">Progreso</label>
+						<Progress value={getProgress()} className="h-2" />
 					</div>
-					<div className="mb-4">
-						<pre className="bg-muted p-4 rounded-md overflow-x-auto">
-							<code>{formattedCode}</code>
-						</pre>
+
+					<div className="min-w-[100px] p-3 bg-background rounded-lg border">
+						<div className="text-xs text-muted-foreground mb-1">Tiempo</div>
+						<div className="font-mono text-lg">{time.toFixed(1)}s</div>
 					</div>
+
+					<div className="min-w-[100px] p-3 bg-background rounded-lg border">
+						<div className="text-xs text-muted-foreground mb-1">CPM</div>
+						<div className="font-mono text-lg">{cpm}</div>
+					</div>
+
+					<div className="min-w-[100px] p-3 bg-background rounded-lg border">
+						<div className="text-xs text-muted-foreground mb-1">Precisión</div>
+						<div className="font-mono text-lg">{accuracy}%</div>
+					</div>
+				</div>
+
+				<Card className="relative overflow-hidden">
+					<motion.div
+						className="absolute inset-0 bg-muted/40 pointer-events-none"
+						animate={shake ? { x: [-2, 2, -2, 2, 0] } : {}}
+						transition={{ duration: 0.5 }}
+					/>
+					<pre className="p-4 font-mono text-base overflow-x-auto">
+						<code>{renderCodeWithIcons()}</code>
+					</pre>
 					<textarea
-						ref={textareaRef}
+						ref={inputRef}
 						value={userInput}
 						onChange={handleInputChange}
 						onKeyDown={handleKeyDown}
-						className="w-full h-40 p-4 bg-background text-foreground border border-border rounded-md font-mono resize-none"
-						placeholder="Start typing here..."
-						disabled={!isRunning || isCompleted}
+						className="absolute inset-0 w-full h-full bg-transparent font-mono text-base p-4 resize-none focus:outline-none"
+						style={{
+							color: "transparent",
+							caretColor: "currentColor",
+							WebkitTextFillColor: "transparent",
+						}}
+						spellCheck="false"
+						aria-label="Área de escritura de código"
 					/>
-					{!isRunning && !isCompleted && (
-						<Button onClick={handleStart} className="mt-4">
-							Start
-						</Button>
-					)}
-					{isCompleted && (
-						<div className="mt-4 p-4 bg-muted rounded-md">
-							<h3 className="text-xl font-bold mb-2">Race Stats</h3>
-							<p>Time: {formatTime(time)}</p>
-							<p>WPM: {calculateWPM()}</p>
-							<p>Accuracy: {calculateAccuracy()}%</p>
-							<p>Errors: {errors}</p>
-						</div>
-					)}
-				</CardContent>
-			</Card>
+					<motion.div
+						className="absolute inset-0 font-mono text-base p-4 pointer-events-none whitespace-pre"
+						aria-hidden="true"
+						animate={shake ? { x: [-2, 2, -2, 2, 0] } : {}}
+						transition={{ duration: 0.5 }}
+					>
+						{formattedCode.split("").map((char, index) => (
+							<span
+								key={index}
+								className={
+									index === cursorPosition
+										? "bg-primary/20 text-primary"
+										: index === cursorPosition - 1 && shake
+										? "bg-red-500/20 text-red-500"
+										: index < userInput.length
+										? "text-primary"
+										: index === userInput.length
+										? "bg-secondary/20 text-secondary"
+										: "text-muted-foreground"
+								}
+							>
+								{char}
+							</span>
+						))}
+					</motion.div>
+				</Card>
+			</div>
 		</div>
 	);
 }
