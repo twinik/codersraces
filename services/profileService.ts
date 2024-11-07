@@ -28,7 +28,8 @@ export const getUserRaces = async (user_id: string): Promise<RaceResult[]> => {
 	const { data, error } = await supabase
 		.from("race_results")
 		.select("*")
-		.eq("user_id", user_id);
+		.eq("user_id", user_id)
+		.order("completed_at", { ascending: false });
 
 	if (error) {
 		console.error(

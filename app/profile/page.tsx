@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Activity, Clock, Trophy, TrendingUp, Info } from "lucide-react";
+import { Activity, Clock, Trophy, TrendingUp } from "lucide-react";
 import { fetchSession } from "@/services/authService";
 import { getUserRaces, getUserStats } from "@/services/profileService";
 import { UserSession, RaceResult, UserStats } from "@/lib/types";
-import { Skeleton } from "@/components/ui/skeleton";
-import { LanguageBadge, IconLanguage } from "@/components/language-badge";
+import ProfileSkeleton from "@/components/ui/skeletons/profile-skeleton";
+import { LanguageBadge } from "@/components/language-badge";
 import CPMTooltip from "@/components/cpm-tooltip";
+import MyRaces from "@/components/my-races";
 
 export default function Profile() {
 	const [user, setUser] = useState<UserSession | null>(null);
@@ -40,47 +41,7 @@ export default function Profile() {
 	}, []);
 
 	if (isLoading) {
-		return (
-			<div className="dark min-h-screen bg-background text-foreground">
-				<main className="container mx-auto px-4 py-8">
-					<div className="max-w-5xl mx-auto space-y-8">
-						<div className="flex items-start gap-6">
-							<Skeleton className="h-24 w-24 rounded-full" />
-							<div className="space-y-2 flex-grow">
-								<div className="flex items-center space-x-2">
-									<Skeleton className="h-8 w-48" />
-									<Skeleton className="h-6 w-32" />
-								</div>
-								<Skeleton className="h-6 w-40" />
-							</div>
-						</div>
-						<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-							{[...Array(4)].map((_, i) => (
-								<Card key={i}>
-									<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-										<Skeleton className="h-4 w-24" />
-										<Skeleton className="h-4 w-4 rounded-full" />
-									</CardHeader>
-									<CardContent>
-										<Skeleton className="h-8 w-16" />
-									</CardContent>
-								</Card>
-							))}
-						</div>
-						<div className="space-y-4">
-							<Skeleton className="h-8 w-32" />
-							<div className="rounded-lg border border-border overflow-hidden">
-								<div className="space-y-2 p-4">
-									{[...Array(3)].map((_, i) => (
-										<Skeleton key={i} className="h-12 w-full" />
-									))}
-								</div>
-							</div>
-						</div>
-					</div>
-				</main>
-			</div>
-		);
+		return <ProfileSkeleton />;
 	}
 
 	if (!user) {
@@ -184,62 +145,7 @@ export default function Profile() {
 							</Card>
 						</div>
 
-						{/* Recent Races */}
-						<div className="space-y-4">
-							<h2 className="text-2xl font-semibold">Mis carreras</h2>
-							<div className="rounded-lg border border-border overflow-hidden">
-								<div className="overflow-x-auto">
-									<table className="w-full">
-										<thead>
-											<tr className="border-b border-border bg-card">
-												<th className="text-left text-sm text-muted-foreground font-medium px-4 py-3">
-													Fecha
-												</th>
-												<th className="text-left text-sm text-muted-foreground font-medium px-4 py-3">
-													CPM
-												</th>
-												<th className="text-left text-sm text-muted-foreground font-medium px-4 py-3">
-													Tiempo
-												</th>
-												<th className="text-left text-sm text-muted-foreground font-medium px-4 py-3">
-													Lenguaje
-												</th>
-											</tr>
-										</thead>
-										<tbody>
-											{races.length > 0 ? (
-												races.map((race, index) => (
-													<tr
-														key={index}
-														className="border-b border-border bg-card/50 hover:bg-card/80 transition-colors"
-													>
-														<td className="px-4 py-3">
-															{new Date(race.completed_at).toLocaleDateString()}
-														</td>
-														<td className="px-4 py-3">{race.cpm}</td>
-														<td className="px-4 py-3">
-															{parseFloat(race.time_elapsed.toFixed(1))}s
-														</td>
-														<td className="px-4 py-3">
-															<IconLanguage language={race.language} />
-														</td>
-													</tr>
-												))
-											) : (
-												<tr>
-													<td
-														colSpan={4}
-														className="px-4 py-3 text-center text-muted-foreground"
-													>
-														No hay carreras recientes
-													</td>
-												</tr>
-											)}
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
+						<MyRaces races={races} />
 					</div>
 				</main>
 			</div>
