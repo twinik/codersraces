@@ -136,11 +136,7 @@ export default function LeaderBoardTable() {
 											<span>{entry.name}</span>
 										</div>
 									</td>
-									<td className="px-4 py-3">
-										{entry.average_cpm.toLocaleString("es-ES", {
-											maximumFractionDigits: 2,
-										})}
-									</td>
+									<td className="px-4 py-3">{entry.average_cpm.toFixed(2)}</td>
 									<td className="px-4 py-3">
 										<span
 											className={
@@ -151,7 +147,7 @@ export default function LeaderBoardTable() {
 													: "text-red-500"
 											}
 										>
-											{entry.average_accuracy}%
+											{entry.average_accuracy.toFixed(2)}%
 										</span>
 									</td>
 									<td className="px-4 py-3">{entry.total_races}</td>

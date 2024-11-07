@@ -54,13 +54,13 @@ export default function MyRaces({ races }: MyRacesProps) {
 
 										<td className="px-4 py-3">{race.cpm}</td>
 										<td
-											className={
+											className={`px-4 py-3 ${
 												race.accuracy >= 80
 													? "text-green-500"
 													: race.accuracy >= 50
 													? "text-yellow-500"
 													: "text-red-500"
-											}
+											}`}
 										>
 											{race.accuracy}%
 										</td>
