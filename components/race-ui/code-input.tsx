@@ -34,7 +34,7 @@ export function CodeInput({
 	const renderCodeWithIcons = () => {
 		return formattedCode.split("\n").map((line, index) => (
 			<div key={index} className="flex items-center">
-				<span>{line}</span>
+				<div className="whitespace-pre">{line}</div>
 				{index < formattedCode.split("\n").length - 1 && (
 					<CornerDownLeft className="ml-2 text-muted-foreground" size={16} />
 				)}
@@ -44,13 +44,13 @@ export function CodeInput({
 
 	return (
 		<motion.div
-			className="relative font-mono text-base leading-relaxed"
+			className="relative text-base leading-relaxed"
 			animate={shake ? { x: [-2, 2, -2, 2, 0] } : {}}
 			transition={{ duration: 0.5 }}
 		>
-			<pre className="p-4 overflow-x-auto">
-				<code>{renderCodeWithIcons()}</code>
-			</pre>
+			<div className="p-4 overflow-x-auto">
+				<div className="relative">{renderCodeWithIcons()}</div>
+			</div>
 			<textarea
 				ref={inputRef}
 				value={userInput}
@@ -67,31 +67,35 @@ export function CodeInput({
 					color: "transparent",
 					caretColor: "currentColor",
 					WebkitTextFillColor: "transparent",
+					letterSpacing: "normal",
 				}}
 				spellCheck="false"
 				aria-label="Área de escritura de código"
 			/>
 			<div
 				ref={overlayRef}
-				className="absolute inset-0 p-4 pointer-events-none whitespace-pre overflow-hidden"
+				className="absolute inset-0 p-4 pointer-events-none overflow-hidden"
 				aria-hidden="true"
 			>
-				{formattedCode.split("").map((char, index) => (
-					<span
-						key={index}
-						className={`${
-							index === errorIndex
-								? "bg-red-500/20 text-red-500"
-								: index === cursorPosition
-								? "bg-primary/20 text-primary"
-								: index < userInput.length
-								? "text-primary"
-								: "text-muted-foreground"
-						} transition-colors duration-100`}
-					>
-						{char}
-					</span>
-				))}
+				<div className="whitespace-pre">
+					{formattedCode.split("").map((char, index) => (
+						<span
+							key={index}
+							className={`${
+								index === errorIndex
+									? "bg-red-500/20 text-red-500"
+									: index === cursorPosition
+									? "bg-primary/20 text-primary"
+									: index < userInput.length
+									? "text-primary"
+									: "text-muted-foreground"
+							} transition-colors duration-100`}
+							style={{ letterSpacing: "normal" }}
+						>
+							{char}
+						</span>
+					))}
+				</div>
 			</div>
 		</motion.div>
 	);

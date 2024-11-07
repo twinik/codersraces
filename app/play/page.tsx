@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { fetchSession } from "@/services/authService";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -24,7 +25,7 @@ import {
 	getCodeSnippetCompetitive,
 	formatCodeSnippet,
 } from "@/services/gameService";
-import { CodeSnippet, ProgrammingLanguage } from "@/lib/types";
+import { CodeSnippet, ProgrammingLanguage, UserSession } from "@/lib/types";
 
 export default function Play() {
 	const router = useRouter();
@@ -42,9 +43,15 @@ export default function Play() {
 		useState<CodeSnippet | null>(null);
 	const [isLoadingPractice, setIsLoadingPractice] = useState(false);
 	const [isLoadingCompetitive, setIsLoadingCompetitive] = useState(false);
+	const [session, setSession] = useState<UserSession>();
 
 	useEffect(() => {
 		setLanguages(getProgrammingLanguages());
+		const getSession = async () => {
+			const session = await fetchSession();
+			setSession(session);
+		};
+		getSession();
 	}, []);
 
 	const fetchPracticeSnippet = async (language: ProgrammingLanguage) => {
@@ -211,13 +218,19 @@ export default function Play() {
 											))}
 										</SelectContent>
 									</Select>
-									<Button
-										className="w-full md:w-auto md:ml-auto"
-										disabled={!competitiveLanguage || isLoadingCompetitive}
-										onClick={handleStartCompetitive}
-									>
-										Comenzar
-									</Button>
+									{session?.id ? (
+										<Button
+											className="w-full md:w-auto md:ml-auto"
+											disabled={!competitiveLanguage || isLoadingCompetitive}
+											onClick={handleStartCompetitive}
+										>
+											Comenzar
+										</Button>
+									) : (
+										<Button className="w-full md:w-auto md:ml-auto" disabled>
+											Inicia sesión para competir
+										</Button>
+									)}
 								</div>
 							</div>
 						</CardContent>
