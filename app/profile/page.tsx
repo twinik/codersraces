@@ -125,7 +125,7 @@ export default function Profile() {
 								</CardHeader>
 								<CardContent>
 									<div className="text-2xl font-bold">
-										{stats?.average_cpm || 0}
+										{stats?.average_cpm.toFixed(2) || 0}
 									</div>
 								</CardContent>
 							</Card>
