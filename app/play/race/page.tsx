@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { CodeRace } from "@/components/code-race";
+import { CodeRace } from "@/components/race-ui/code-race";
 import { getCodeSnippetById } from "@/services/gameService";
 import { CodeSnippet } from "@/lib/types";
 import { Loader2 } from "lucide-react";
