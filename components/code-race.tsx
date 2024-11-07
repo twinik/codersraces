@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { CornerDownLeft } from "lucide-react";
 import confetti from "canvas-confetti";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
 import { fetchSession } from "@/services/authService";
@@ -29,6 +29,7 @@ export function CodeRace({ codeSnippet, mode }: CodeRaceProps) {
 	const [errors, setErrors] = useState(0);
 	const [isCompleted, setIsCompleted] = useState(false);
 	const [shake, setShake] = useState(false);
+	const [errorIndex, setErrorIndex] = useState<number | null>(null);
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 	const formattedCode = formatCodeSnippet(codeSnippet.code);
 
@@ -71,7 +72,11 @@ export function CodeRace({ codeSnippet, mode }: CodeRaceProps) {
 			if (input[input.length - 1] !== formattedCode[input.length - 1]) {
 				setShake(true);
 				setErrors((prev) => prev + 1);
-				setTimeout(() => setShake(false), 500);
+				setErrorIndex(input.length - 1);
+				setTimeout(() => {
+					setShake(false);
+					setErrorIndex(null);
+				}, 500);
 				return;
 			}
 			setUserInput(input);
@@ -187,7 +192,7 @@ export function CodeRace({ codeSnippet, mode }: CodeRaceProps) {
 	}
 
 	return (
-		<div className="w-full max-w-6xl mx-auto p-6">
+		<div className="w-full max-w-6xl mx-auto p-6 mt-6">
 			<div className="space-y-6">
 				<div>
 					<h1 className="text-2xl font-bold text-foreground">
@@ -232,51 +237,47 @@ export function CodeRace({ codeSnippet, mode }: CodeRaceProps) {
 
 				<Card className="relative overflow-hidden">
 					<motion.div
-						className="absolute inset-0 bg-muted/40 pointer-events-none"
-						animate={shake ? { x: [-2, 2, -2, 2, 0] } : {}}
-						transition={{ duration: 0.5 }}
-					/>
-					<pre className="p-4 font-mono text-base overflow-x-auto">
-						<code>{renderCodeWithIcons()}</code>
-					</pre>
-					<textarea
-						ref={inputRef}
-						value={userInput}
-						onChange={handleInputChange}
-						onKeyDown={handleKeyDown}
-						className="absolute inset-0 w-full h-full bg-transparent font-mono text-base p-4 resize-none focus:outline-none"
-						style={{
-							color: "transparent",
-							caretColor: "currentColor",
-							WebkitTextFillColor: "transparent",
-						}}
-						spellCheck="false"
-						aria-label="Área de escritura de código"
-					/>
-					<motion.div
-						className="absolute inset-0 font-mono text-base p-4 pointer-events-none whitespace-pre"
-						aria-hidden="true"
 						animate={shake ? { x: [-2, 2, -2, 2, 0] } : {}}
 						transition={{ duration: 0.5 }}
 					>
-						{formattedCode.split("").map((char, index) => (
-							<span
-								key={index}
-								className={
-									index === cursorPosition
-										? "bg-primary/20 text-primary"
-										: index === cursorPosition - 1 && shake
-										? "bg-red-500/20 text-red-500"
-										: index < userInput.length
-										? "text-primary"
-										: index === userInput.length
-										? "bg-secondary/20 text-secondary"
-										: "text-muted-foreground"
-								}
-							>
-								{char}
-							</span>
-						))}
+						<pre className="p-4 font-mono text-base overflow-x-auto">
+							<code>{renderCodeWithIcons()}</code>
+						</pre>
+						<textarea
+							ref={inputRef}
+							value={userInput}
+							onChange={handleInputChange}
+							onKeyDown={handleKeyDown}
+							className="absolute inset-0 w-full h-full bg-transparent font-mono text-base p-4 resize-none focus:outline-none"
+							style={{
+								color: "transparent",
+								caretColor: "currentColor",
+								WebkitTextFillColor: "transparent",
+							}}
+							spellCheck="false"
+							aria-label="Área de escritura de código"
+						/>
+						<div
+							className="absolute inset-0 font-mono text-base p-4 pointer-events-none whitespace-pre"
+							aria-hidden="true"
+						>
+							{formattedCode.split("").map((char, index) => (
+								<span
+									key={index}
+									className={
+										index === errorIndex
+											? "bg-red-500/20 text-red-500"
+											: index === cursorPosition
+											? "bg-primary/20 text-primary"
+											: index < userInput.length
+											? "text-primary"
+											: "text-muted-foreground"
+									}
+								>
+									{char}
+								</span>
+							))}
+						</div>
 					</motion.div>
 				</Card>
 			</div>
