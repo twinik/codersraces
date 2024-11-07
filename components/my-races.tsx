@@ -62,7 +62,7 @@ export default function MyRaces({ races }: MyRacesProps) {
 													: "text-red-500"
 											}
 										>
-											{race.accuracy.toFixed(2)}%
+											{race.accuracy}%
 										</td>
 										<td className="px-4 py-3">
 											{parseFloat(race.time_elapsed.toFixed(1))}s
