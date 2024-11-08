@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { CodeSnippet } from "@/lib/types";
 import { useCodeRace } from "@/hooks/use-code-race";
@@ -13,7 +13,26 @@ interface CodeRaceProps {
 	mode: "practice" | "competitive";
 }
 
+function useIsMobile() {
+	const [isMobile, setIsMobile] = useState(false);
+
+	useEffect(() => {
+		const checkIsMobile = () => {
+			setIsMobile(window.innerWidth < 768);
+		};
+
+		checkIsMobile();
+		window.addEventListener("resize", checkIsMobile);
+
+		return () => window.removeEventListener("resize", checkIsMobile);
+	}, []);
+
+	return isMobile;
+}
+
 export function CodeRace({ codeSnippet, mode }: CodeRaceProps) {
+	const isMobile = useIsMobile();
+
 	const {
 		time,
 		cpm,
@@ -28,6 +47,24 @@ export function CodeRace({ codeSnippet, mode }: CodeRaceProps) {
 		errorIndex,
 		shake,
 	} = useCodeRace(codeSnippet, mode);
+
+	if (isMobile) {
+		return (
+			<Card className="mt-12 max-w-md mx-4 p-6 text-center text-pretty">
+				<h2 className="text-2xl font-bold text-foreground mb-4">
+					¿Programarías desde un celular?
+				</h2>
+				<p className="text-lg text-muted-foreground">
+					Entonces, ¿por qué estás intentándolo ahora?
+				</p>
+				<p className="mt-4 text-sm text-muted-foreground">
+					Esta aplicación está diseñada para ser usada en dispositivos de
+					escritorio. Por favor, accede desde una computadora para disfrutar de
+					la experiencia completa.
+				</p>
+			</Card>
+		);
+	}
 
 	if (isCompleted) {
 		return <CompletionCard time={time} cpm={cpm} accuracy={accuracy} />;

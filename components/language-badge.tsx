@@ -20,7 +20,7 @@ type LanguageIconProps = {
 const languageColors: Record<string, string> = {
 	JavaScript: "from-yellow-400 to-yellow-500",
 	TypeScript: "from-blue-400 to-blue-500",
-	Python: "from-blue-400 to-yellow-500",
+	Python: "from-blue-500 to-blue-600",
 	Java: "from-red-400 to-red-500",
 	PHP: "from-indigo-400 to-indigo-500",
 	Rust: "from-orange-400 to-orange-500",
