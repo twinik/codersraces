@@ -59,7 +59,7 @@ export function MainNav() {
 						<span className="sr-only">Toggle menu</span>
 					</Button>
 				</SheetTrigger>
-				<SheetContent side="left" className="w-[240px] sm:w-[300px]">
+				<SheetContent side="left" className="w-[240px] sm:w-[300px] dark">
 					<div className="flex flex-col gap-4 mt-4">
 						<NavLinks />
 					</div>

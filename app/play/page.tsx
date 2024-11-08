@@ -129,13 +129,13 @@ export default function Play() {
 						</CardHeader>
 						<CardContent className="flex-1 flex flex-col justify-between">
 							<div className="space-y-4 flex-1 flex flex-col">
-								<div className="flex-1 min-h-[150px] md:min-h-[200px] rounded-md bg-muted p-4 overflow-x-auto">
+								<div className="flex-1 min-h-[150px] md:min-h-[200px] rounded-md bg-muted p-4 overflow-x-auto max-w-full">
 									{isLoadingPractice ? (
 										<div className="flex items-center justify-center h-full">
 											<Loader2 className="w-6 h-6 animate-spin text-primary" />
 										</div>
 									) : practiceSnippet ? (
-										<pre className="text-sm text-muted-foreground">
+										<pre className="text-sm text-muted-foreground whitespace-pre-wrap break-words">
 											<code>{formatCodeSnippet(practiceSnippet.code)}</code>
 										</pre>
 									) : (
@@ -154,9 +154,13 @@ export default function Play() {
 										<SelectTrigger className="w-full md:w-[200px]">
 											<SelectValue placeholder="Selecciona un lenguaje" />
 										</SelectTrigger>
-										<SelectContent>
+										<SelectContent className="dark">
 											{languages.map((lang) => (
-												<SelectItem key={lang} value={lang}>
+												<SelectItem
+													key={lang}
+													value={lang}
+													className="cursor-pointer"
+												>
 													{lang}
 												</SelectItem>
 											))}
@@ -185,13 +189,13 @@ export default function Play() {
 						</CardHeader>
 						<CardContent className="flex-1 flex flex-col justify-between">
 							<div className="space-y-4 flex-1 flex flex-col">
-								<div className="flex-1 min-h-[150px] md:min-h-[200px] rounded-md bg-muted p-4 overflow-x-auto">
+								<div className="flex-1 min-h-[150px] md:min-h-[200px] rounded-md bg-muted p-4 overflow-x-auto max-w-full">
 									{isLoadingCompetitive ? (
 										<div className="flex items-center justify-center h-full">
 											<Loader2 className="w-6 h-6 animate-spin text-primary" />
 										</div>
 									) : competitiveSnippet ? (
-										<pre className="text-sm text-muted-foreground">
+										<pre className="text-sm text-muted-foreground whitespace-pre-wrap break-words">
 											<code>{formatCodeSnippet(competitiveSnippet.code)}</code>
 										</pre>
 									) : (
@@ -210,9 +214,13 @@ export default function Play() {
 										<SelectTrigger className="w-full md:w-[200px]">
 											<SelectValue placeholder="Selecciona un lenguaje" />
 										</SelectTrigger>
-										<SelectContent>
+										<SelectContent className="dark">
 											{languages.map((lang) => (
-												<SelectItem key={lang} value={lang}>
+												<SelectItem
+													key={lang}
+													value={lang}
+													className="cursor-pointer"
+												>
 													{lang}
 												</SelectItem>
 											))}
