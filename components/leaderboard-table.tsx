@@ -172,8 +172,8 @@ export default function LeaderBoardTable() {
 				</table>
 			</div>
 
-			<div className="border-t border-border p-4 bg-card flex items-center justify-between">
-				<div className="flex items-center md:gap-2 mr-3 md:mr-0">
+			<div className="border-t border-border p-4 bg-card flex flex-col sm:flex-row items-center justify-between">
+				<div className="hidden sm:flex items-center md:gap-2 mr-3 md:mr-0">
 					<span className="text-sm text-muted-foreground">
 						Filas por página
 					</span>
@@ -193,7 +193,7 @@ export default function LeaderBoardTable() {
 				</div>
 
 				<div className="flex items-center gap-4">
-					<span className="text-sm text-muted-foreground">
+					<span className="hidden sm:inline text-sm text-muted-foreground">
 						Página {currentPage} de {Math.ceil(data.length / rowsPerPage)}
 					</span>
 					<div className="flex gap-1">

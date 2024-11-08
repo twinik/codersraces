@@ -3,8 +3,11 @@
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { CodeRace } from "@/components/race-ui/code-race";
-import { getCodeSnippetById } from "@/services/gameService";
-import { CodeSnippet } from "@/lib/types";
+import {
+	getCodeSnippetCompetitive,
+	getCodeSnippetPractice,
+} from "@/services/gameService";
+import { CodeSnippet, ProgrammingLanguage } from "@/lib/types";
 import { Loader2 } from "lucide-react";
 
 function CodeSnippetLoader() {
@@ -15,11 +18,17 @@ function CodeSnippetLoader() {
 	useEffect(() => {
 		const fetchCodeSnippet = async () => {
 			const mode = searchParams.get("mode");
-			const snippetId = searchParams.get("snippetId");
+			const language = searchParams.get("language");
 
-			if (mode && snippetId) {
+			if (mode && language) {
 				try {
-					const snippet = await getCodeSnippetById(snippetId);
+					setIsLoading(true);
+					const snippet =
+						mode === "practice"
+							? await getCodeSnippetPractice(language as ProgrammingLanguage)
+							: await getCodeSnippetCompetitive(
+									language as ProgrammingLanguage
+							  );
 					setCodeSnippet(snippet);
 				} catch (error) {
 					console.error("Error fetching code snippet:", error);

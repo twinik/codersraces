@@ -51,29 +51,31 @@ export function MainNav() {
 	);
 
 	return (
-		<nav className="flex items-center justify-between p-4 max-w-7xl mx-auto w-full animate-fade-in-down animate-delay-400 animate-duration-900">
-			<Sheet open={isOpen} onOpenChange={setIsOpen}>
-				<SheetTrigger asChild>
-					<Button variant="outline" size="icon" className="md:hidden">
-						<Menu className="h-6 w-6" />
-						<span className="sr-only">Toggle menu</span>
-					</Button>
-				</SheetTrigger>
-				<SheetContent side="left" className="w-[240px] sm:w-[300px]">
-					<div className="flex flex-col gap-4 mt-4">
-						<NavLinks />
-					</div>
-				</SheetContent>
-			</Sheet>
-			<div className="hidden md:flex items-center gap-8">
-				<NavLinks />
-			</div>
-			<div className="md:hidden">
-				<SignInButton />
-			</div>
-			<div className="hidden md:block">
-				<SignInButton />
-			</div>
-		</nav>
+		<header>
+			<nav className="flex items-center justify-between p-4 max-w-7xl mx-auto w-full animate-fade-in-down animate-delay-400 animate-duration-900">
+				<Sheet open={isOpen} onOpenChange={setIsOpen}>
+					<SheetTrigger asChild>
+						<Button variant="outline" size="icon" className="md:hidden">
+							<Menu className="h-6 w-6" />
+							<span className="sr-only">Toggle menu</span>
+						</Button>
+					</SheetTrigger>
+					<SheetContent side="left" className="w-[240px] sm:w-[300px] dark">
+						<div className="flex flex-col gap-4 mt-4">
+							<NavLinks />
+						</div>
+					</SheetContent>
+				</Sheet>
+				<div className="hidden md:flex items-center gap-8">
+					<NavLinks />
+				</div>
+				<div className="md:hidden">
+					<SignInButton />
+				</div>
+				<div className="hidden md:block">
+					<SignInButton />
+				</div>
+			</nav>
+		</header>
 	);
 }
