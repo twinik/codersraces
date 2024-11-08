@@ -1,4 +1,5 @@
 import { supabase } from "@/utils/supabase/client";
+import { getUserRaces } from "./profileService";
 import {
 	CodeSnippet,
 	ProgrammingLanguage,
@@ -122,10 +123,10 @@ async function fetchCurrentStats(user_id: string): Promise<UserStats | null> {
 	return data[0] as UserStats;
 }
 
-function calculateUpdatedStats(
+async function calculateUpdatedStats(
 	currentStats: UserStats | null,
 	result: RaceResult
-): UserStats {
+): Promise<UserStats> {
 	if (currentStats) {
 		const totalRaces = currentStats.total_races + 1;
 		const totalTime = currentStats.total_time + result.time_elapsed;
@@ -138,6 +139,8 @@ function calculateUpdatedStats(
 				result.accuracy) /
 			totalRaces;
 
+		const mostUsedLanguage = await getMostUsedLanguage(result.user_id);
+
 		return {
 			user_id: result.user_id,
 			total_races: totalRaces,
@@ -145,9 +148,11 @@ function calculateUpdatedStats(
 			average_cpm: averageCpm,
 			best_cpm: bestCpm,
 			average_accuracy: averageAccuracy,
-			principal_language: result.language,
+			principal_language: mostUsedLanguage,
 		};
 	}
+
+	const mostUsedLanguage = await getMostUsedLanguage(result.user_id);
 
 	return {
 		user_id: result.user_id,
@@ -156,8 +161,45 @@ function calculateUpdatedStats(
 		average_cpm: result.cpm,
 		best_cpm: result.cpm,
 		average_accuracy: result.accuracy,
-		principal_language: result.language,
+		principal_language: mostUsedLanguage,
 	};
+}
+
+async function getMostUsedLanguage(userId: string): Promise<string> {
+	const races = await getUserRaces(userId);
+
+	if (races.length === 0) return "";
+
+	const languageCount: { [key: string]: number } = {};
+
+	races.forEach((result) => {
+		languageCount[result.language] = (languageCount[result.language] || 0) + 1;
+	});
+
+	let mostUsedLanguage = "";
+	let maxCount = 0;
+
+	races.forEach((result) => {
+		const count = languageCount[result.language];
+
+		if (
+			count > maxCount ||
+			(count === maxCount && isLastUsed(result.language, races))
+		) {
+			mostUsedLanguage = result.language;
+			maxCount = count;
+		}
+	});
+
+	return mostUsedLanguage;
+}
+
+function isLastUsed(language: string, data: RaceResult[]): boolean {
+	const lastRace = data.filter((result) => result.language === language).pop();
+	return lastRace
+		? new Date(lastRace.completed_at) >
+				new Date(data[data.length - 1].completed_at)
+		: false;
 }
 
 async function saveUserStats(updatedStats: UserStats) {
@@ -178,7 +220,7 @@ export const updateUserStats = async (result: RaceResult) => {
 
 	try {
 		const currentStats = await fetchCurrentStats(result.user_id);
-		const updatedStats = calculateUpdatedStats(currentStats, result);
+		const updatedStats = await calculateUpdatedStats(currentStats, result);
 		await saveUserStats(updatedStats);
 		console.log("Estadísticas del usuario actualizadas exitosamente.");
 	} catch (error) {
