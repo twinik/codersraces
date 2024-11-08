@@ -21,8 +21,7 @@ export enum ProgrammingLanguage {
 	PHP = "PHP",
 	Rust = "Rust",
 	Python = "Python",
-	Cpp = "C++",
-	Go = "Go",
+	Cpp = "Cpp",
 }
 
 export interface RaceResult {

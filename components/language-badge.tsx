@@ -7,7 +7,6 @@ import {
 	BiLogoJava,
 	BiLogoPhp,
 	BiLogoCPlusPlus,
-	BiLogoGoLang,
 	BiCodeAlt,
 } from "react-icons/bi";
 import { FaRust } from "react-icons/fa";
@@ -25,7 +24,6 @@ const languageColors: Record<string, string> = {
 	PHP: "from-indigo-400 to-indigo-500",
 	Rust: "from-orange-400 to-orange-500",
 	"C++": "from-purple-400 to-purple-500",
-	Go: "from-teal-400 to-teal-500",
 };
 
 const LanguageIcon: React.FC<LanguageIconProps> = ({ language, className }) => {
@@ -44,8 +42,6 @@ const LanguageIcon: React.FC<LanguageIconProps> = ({ language, className }) => {
 			return <BiLogoCPlusPlus className={className} />;
 		case "rust":
 			return <FaRust className={className} />;
-		case "go":
-			return <BiLogoGoLang className={className} />;
 		default:
 			return <BiCodeAlt className={className} />;
 	}
