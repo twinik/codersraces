@@ -18,14 +18,21 @@ export const getProgrammingLanguages = (): string[] => {
 export const getCodeSnippetPractice = async (
 	language: ProgrammingLanguage
 ): Promise<CodeSnippet> => {
+	const formattedLanguage = mapProgrammingLanguage(language);
+
 	const { data, error } = await supabase
 		.from("code_snippets")
 		.select("*")
 		.eq("mode", "practice")
-		.eq("language", language);
+		.eq("language", formattedLanguage);
 
 	if (error) {
-		console.error("Error fetching code snippet:", error);
+		console.error(
+			"Error fetching code snippet:",
+			error.message,
+			error.details,
+			error.hint
+		);
 		const codeSnippetNull: CodeSnippet = {
 			id: "",
 			title: "",
@@ -43,11 +50,13 @@ export const getCodeSnippetPractice = async (
 export const getCodeSnippetCompetitive = async (
 	language: ProgrammingLanguage
 ): Promise<CodeSnippet> => {
+	const formattedLanguage = mapProgrammingLanguage(language);
+
 	const { data, error } = await supabase
 		.from("code_snippets")
 		.select("*")
 		.eq("mode", "competitive")
-		.eq("language", language);
+		.eq("language", formattedLanguage);
 
 	if (error) {
 		console.error("Error fetching code snippet:", error);
@@ -228,3 +237,7 @@ export const updateUserStats = async (result: RaceResult) => {
 		throw error;
 	}
 };
+
+function mapProgrammingLanguage(language: ProgrammingLanguage): string {
+	return language === ProgrammingLanguage.Cpp ? "C++" : language;
+}

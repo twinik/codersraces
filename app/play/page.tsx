@@ -161,7 +161,7 @@ export default function Play() {
 													value={lang}
 													className="cursor-pointer"
 												>
-													{lang}
+													{lang === "Cpp" ? "C++" : lang}
 												</SelectItem>
 											))}
 										</SelectContent>
@@ -221,7 +221,7 @@ export default function Play() {
 													value={lang}
 													className="cursor-pointer"
 												>
-													{lang}
+													{lang === "Cpp" ? "C++" : lang}
 												</SelectItem>
 											))}
 										</SelectContent>
