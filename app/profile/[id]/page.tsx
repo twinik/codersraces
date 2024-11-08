@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Activity, Clock, Trophy, TrendingUp } from "lucide-react";
@@ -10,18 +11,21 @@ import { UserSession, RaceResult, UserStats } from "@/lib/types";
 import ProfileSkeleton from "@/components/ui/skeletons/profile-skeleton";
 import { LanguageBadge } from "@/components/language-badge";
 import CPMTooltip from "@/components/cpm-tooltip";
-import MyRaces from "@/components/my-races";
+import RacesList from "@/components/races-list";
 
-export default function UserProfile({ username }: { username: string }) {
+export default function UserProfile() {
+	const params = useParams();
 	const [user, setUser] = useState<UserSession>();
 	const [stats, setStats] = useState<UserStats | null>(null);
 	const [races, setRaces] = useState<RaceResult[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
+	const id = params.id as string;
+
 	useEffect(() => {
 		const fetchUserData = async () => {
 			try {
-				const fetchedUser = await getUserProfile(username);
+				const fetchedUser = await getUserProfile(id);
 				setUser(fetchedUser);
 				if (fetchedUser) {
 					const userStats = await getUserStats(fetchedUser.id);
@@ -35,14 +39,16 @@ export default function UserProfile({ username }: { username: string }) {
 				setIsLoading(false);
 			}
 		};
-		fetchUserData();
-	}, []);
+		if (id) {
+			fetchUserData();
+		}
+	}, [id]);
 
 	if (isLoading) {
 		return <ProfileSkeleton />;
 	}
 
-	if (!username) {
+	if (!id) {
 		return (
 			<div className="flex justify-center items-center min-h-screen bg-background text-foreground">
 				<p className="text-lg">
@@ -143,7 +149,7 @@ export default function UserProfile({ username }: { username: string }) {
 							</Card>
 						</div>
 
-						<MyRaces races={races} />
+						<RacesList races={races} title="Carreras" />
 					</div>
 				</main>
 			</div>

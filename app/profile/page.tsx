@@ -10,7 +10,7 @@ import { UserSession, RaceResult, UserStats } from "@/lib/types";
 import ProfileSkeleton from "@/components/ui/skeletons/profile-skeleton";
 import { LanguageBadge } from "@/components/language-badge";
 import CPMTooltip from "@/components/cpm-tooltip";
-import MyRaces from "@/components/my-races";
+import RacesList from "@/components/races-list";
 
 export default function Profile() {
 	const [user, setUser] = useState<UserSession | null>(null);
@@ -145,7 +145,7 @@ export default function Profile() {
 							</Card>
 						</div>
 
-						<MyRaces races={races} />
+						<RacesList races={races} title={"Mis carreras"} />
 					</div>
 				</main>
 			</div>

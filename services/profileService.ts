@@ -46,13 +46,13 @@ export const getUserRaces = async (user_id: string): Promise<RaceResult[]> => {
 
 export const getUserProfile = async (user_id: string): Promise<UserSession> => {
 	const { data, error } = await supabase
-		.from("auth.users")
-		.select("*")
+		.from("user_basic_info")
+		.select("id, avatar_url, name, username, email")
 		.eq("id", user_id);
 
 	if (error) {
 		console.error(
-			"Error fetching user races:",
+			"Error fetching user profile:",
 			error.message,
 			error.details,
 			error.hint
@@ -71,9 +71,9 @@ export const getUserProfile = async (user_id: string): Promise<UserSession> => {
 
 	const userSession: UserSession = {
 		id: user.id,
-		avatarURL: user.user_metadata?.avatar_url || "",
-		name: user.user_metadata?.name || "",
-		username: user.user_metadata?.user_name || "",
+		avatarURL: user.avatar_url || "",
+		name: user.name || "",
+		username: user.username || "",
 		email: user.email || "nomail@nomail.com",
 	};
 

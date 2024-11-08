@@ -61,7 +61,7 @@ export const LanguageBadge: React.FC<LanguageBadgeProps> = ({ language }) => {
 
 	return (
 		<Badge
-			className={`w-full bg-gradient-to-r ${gradientColors} text-white px-3 py-1.5 text-sm font-medium rounded-md flex items-center justify-between transition-all duration-300 hover:shadow-md hover:scale-105`}
+			className={`inline-flex bg-gradient-to-r ${gradientColors} text-white px-3 py-1.5 text-sm font-medium rounded-md items-center justify-between transition-all duration-300 hover:shadow-md hover:scale-105`}
 		>
 			<LanguageIcon
 				language={language}

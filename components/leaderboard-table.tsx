@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,7 +26,7 @@ import { getLeaderboard } from "@/services/leaderboardService";
 import LeaderboardSkeleton from "@/components/ui/skeletons/leaderboard-skeleton";
 
 export default function LeaderBoardTable() {
-	//const router = useRouter();
+	const router = useRouter();
 
 	const [data, setData] = useState<UserLeaderboard[]>([]);
 	const [currentPage, setCurrentPage] = useState(1);
@@ -107,11 +107,11 @@ export default function LeaderBoardTable() {
 							{paginatedData.map((entry, index) => (
 								<motion.tr
 									key={entry.user_id}
-									className="border-b border-border bg-card/50 hover:bg-card/80 transition-colors cursor-pointer"
+									className="border-b border-border bg-card/50 hover:bg-[hsl(0,0%,15%)] transition-colors cursor-pointer"
 									initial={{ opacity: 0, y: 20 }}
 									animate={{ opacity: 1, y: 0 }}
 									transition={{ duration: 0.3, delay: index * 0.05 }}
-									/* onClick={() => router.push(`/profile/${entry.user_id}`)} */
+									onClick={() => router.push(`/profile/${entry.user_id}`)}
 								>
 									<td className="px-4 py-3">
 										<div className="flex items-center gap-2">
