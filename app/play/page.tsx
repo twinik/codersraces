@@ -92,14 +92,14 @@ export default function Play() {
 
 	const handleStartPractice = () => {
 		if (practiceSnippet) {
-			router.push(`/play/race?mode=practice&snippetId=${practiceSnippet.id}`);
+			router.push(`/play/race?mode=practice&language=${practiceLanguage}`);
 		}
 	};
 
 	const handleStartCompetitive = () => {
 		if (competitiveSnippet) {
 			router.push(
-				`/play/race?mode=competitive&snippetId=${competitiveSnippet.id}`
+				`/play/race?mode=competitive&language=${competitiveLanguage}`
 			);
 		}
 	};

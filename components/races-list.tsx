@@ -76,7 +76,7 @@ export default function RacesList({ races, title }: RacesListProps) {
 							) : (
 								<tr>
 									<td
-										colSpan={4}
+										colSpan={6}
 										className="px-4 py-3 text-center text-muted-foreground"
 									>
 										No hay carreras recientes
