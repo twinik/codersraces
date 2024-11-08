@@ -1,14 +1,15 @@
 import { RaceResult } from "@/lib/types";
 import { IconLanguage } from "@/components/language-badge";
 
-interface MyRacesProps {
+interface RacesListProps {
 	races: RaceResult[];
+	title: string;
 }
 
-export default function MyRaces({ races }: MyRacesProps) {
+export default function RacesList({ races, title }: RacesListProps) {
 	return (
 		<div className="space-y-4">
-			<h2 className="text-2xl font-semibold">Mis carreras</h2>
+			<h2 className="text-2xl font-semibold">{title}</h2>
 			<div className="rounded-lg border border-border overflow-hidden">
 				<div className="overflow-x-auto">
 					<table className="w-full">

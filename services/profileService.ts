@@ -1,5 +1,5 @@
 import { supabase } from "@/utils/supabase/client";
-import { UserStats, RaceResult } from "@/lib/types";
+import { UserStats, RaceResult, UserSession } from "@/lib/types";
 
 export const getUserStats = async (user_id: string): Promise<UserStats> => {
 	const { data, error } = await supabase
@@ -42,4 +42,40 @@ export const getUserRaces = async (user_id: string): Promise<RaceResult[]> => {
 	}
 
 	return data as RaceResult[];
+};
+
+export const getUserProfile = async (user_id: string): Promise<UserSession> => {
+	const { data, error } = await supabase
+		.from("user_basic_info")
+		.select("id, avatar_url, name, username, email")
+		.eq("id", user_id);
+
+	if (error) {
+		console.error(
+			"Error fetching user profile:",
+			error.message,
+			error.details,
+			error.hint
+		);
+		const userSessionNull: UserSession = {
+			id: "",
+			avatarURL: "",
+			name: "",
+			username: "",
+			email: "",
+		};
+		return userSessionNull;
+	}
+
+	const user = data[0];
+
+	const userSession: UserSession = {
+		id: user.id,
+		avatarURL: user.avatar_url || "",
+		name: user.name || "",
+		username: user.username || "",
+		email: user.email || "nomail@nomail.com",
+	};
+
+	return userSession;
 };

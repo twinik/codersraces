@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Activity, Clock, Trophy, TrendingUp } from "lucide-react";
-import { fetchSession } from "@/services/authService";
+import { getUserProfile } from "@/services/profileService";
 import { getUserRaces, getUserStats } from "@/services/profileService";
 import { UserSession, RaceResult, UserStats } from "@/lib/types";
 import ProfileSkeleton from "@/components/ui/skeletons/profile-skeleton";
@@ -12,22 +13,24 @@ import { LanguageBadge } from "@/components/language-badge";
 import CPMTooltip from "@/components/cpm-tooltip";
 import RacesList from "@/components/races-list";
 
-export default function Profile() {
-	const [user, setUser] = useState<UserSession | null>(null);
+export default function UserProfile() {
+	const params = useParams();
+	const [user, setUser] = useState<UserSession>();
 	const [stats, setStats] = useState<UserStats | null>(null);
 	const [races, setRaces] = useState<RaceResult[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
+	const id = params.id as string;
+
 	useEffect(() => {
 		const fetchUserData = async () => {
 			try {
-				const fetchedSession = await fetchSession();
-				setUser(fetchedSession);
-
-				if (fetchedSession?.id) {
-					const userStats = await getUserStats(fetchedSession.id);
+				const fetchedUser = await getUserProfile(id);
+				setUser(fetchedUser);
+				if (fetchedUser) {
+					const userStats = await getUserStats(fetchedUser.id);
 					setStats(userStats);
-					const userRaces = await getUserRaces(fetchedSession.id);
+					const userRaces = await getUserRaces(fetchedUser.id);
 					setRaces(userRaces);
 				}
 			} catch (error) {
@@ -36,15 +39,16 @@ export default function Profile() {
 				setIsLoading(false);
 			}
 		};
-
-		fetchUserData();
-	}, []);
+		if (id) {
+			fetchUserData();
+		}
+	}, [id]);
 
 	if (isLoading) {
 		return <ProfileSkeleton />;
 	}
 
-	if (!user) {
+	if (!id) {
 		return (
 			<div className="flex justify-center items-center min-h-screen bg-background text-foreground">
 				<p className="text-lg">
@@ -61,16 +65,16 @@ export default function Profile() {
 					<div className="max-w-5xl mx-auto space-y-8">
 						<div className="flex items-start gap-6">
 							<Avatar className="h-24 w-24">
-								<AvatarImage src={user.avatarURL} alt={user.name} />
+								<AvatarImage src={user?.avatarURL} alt={user?.name} />
 								<AvatarFallback>
-									{user.name.charAt(0).toUpperCase()}
+									{user?.name.charAt(0).toUpperCase()}
 								</AvatarFallback>
 							</Avatar>
 							<div className="flex flex-col">
 								<div className="flex items-end space-x-2">
-									<h1 className="text-3xl font-bold">{user.name}</h1>
+									<h1 className="text-3xl font-bold">{user?.name}</h1>
 									<p className="text-xl text-muted-foreground">
-										{user.username}
+										{user?.username}
 									</p>
 								</div>
 								{stats?.principal_language ? (
@@ -145,7 +149,7 @@ export default function Profile() {
 							</Card>
 						</div>
 
-						<RacesList races={races} title={"Mis carreras"} />
+						<RacesList races={races} title="Carreras" />
 					</div>
 				</main>
 			</div>
