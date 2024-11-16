@@ -79,3 +79,41 @@ export const getUserProfile = async (user_id: string): Promise<UserSession> => {
 
 	return userSession;
 };
+
+export const getUserProfileByUsername = async (
+	username: string
+): Promise<UserSession> => {
+	const { data, error } = await supabase
+		.from("user_basic_info")
+		.select("id, avatar_url, name, username, email")
+		.eq("username", username);
+
+	if (error) {
+		console.error(
+			"Error fetching user profile:",
+			error.message,
+			error.details,
+			error.hint
+		);
+		const userSessionNull: UserSession = {
+			id: "",
+			avatarURL: "",
+			name: "",
+			username: "",
+			email: "",
+		};
+		return userSessionNull;
+	}
+
+	const user = data[0];
+
+	const userSession: UserSession = {
+		id: user.id,
+		avatarURL: user.avatar_url || "",
+		name: user.name || "",
+		username: user.username || "",
+		email: user.email || "nomail@nomail.com",
+	};
+
+	return userSession;
+};

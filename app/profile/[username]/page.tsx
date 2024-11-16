@@ -5,8 +5,11 @@ import { useParams } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Activity, Clock, Trophy, TrendingUp } from "lucide-react";
-import { getUserProfile } from "@/services/profileService";
-import { getUserRaces, getUserStats } from "@/services/profileService";
+import {
+	getUserProfileByUsername,
+	getUserRaces,
+	getUserStats,
+} from "@/services/profileService";
 import { UserSession, RaceResult, UserStats } from "@/lib/types";
 import ProfileSkeleton from "@/components/ui/skeletons/profile-skeleton";
 import { LanguageBadge } from "@/components/language-badge";
@@ -20,12 +23,12 @@ export default function UserProfile() {
 	const [races, setRaces] = useState<RaceResult[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
-	const id = params.id as string;
+	const username = params.username as string;
 
 	useEffect(() => {
 		const fetchUserData = async () => {
 			try {
-				const fetchedUser = await getUserProfile(id);
+				const fetchedUser = await getUserProfileByUsername(username);
 				setUser(fetchedUser);
 				if (fetchedUser) {
 					const userStats = await getUserStats(fetchedUser.id);
@@ -39,16 +42,16 @@ export default function UserProfile() {
 				setIsLoading(false);
 			}
 		};
-		if (id) {
+		if (username) {
 			fetchUserData();
 		}
-	}, [id]);
+	}, [username]);
 
 	if (isLoading) {
 		return <ProfileSkeleton />;
 	}
 
-	if (!id) {
+	if (!username) {
 		return (
 			<div className="flex justify-center items-center min-h-screen bg-background text-foreground">
 				<p className="text-lg">
