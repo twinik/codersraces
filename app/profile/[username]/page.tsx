@@ -5,8 +5,11 @@ import { useParams } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Activity, Clock, Trophy, TrendingUp } from "lucide-react";
-import { getUserProfile } from "@/services/profileService";
-import { getUserRaces, getUserStats } from "@/services/profileService";
+import {
+	getUserProfileByUsername,
+	getUserRaces,
+	getUserStats,
+} from "@/services/profileService";
 import { UserSession, RaceResult, UserStats } from "@/lib/types";
 import ProfileSkeleton from "@/components/ui/skeletons/profile-skeleton";
 import { LanguageBadge } from "@/components/language-badge";
@@ -20,12 +23,12 @@ export default function UserProfile() {
 	const [races, setRaces] = useState<RaceResult[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
-	const id = params.id as string;
+	const username = params.username as string;
 
 	useEffect(() => {
 		const fetchUserData = async () => {
 			try {
-				const fetchedUser = await getUserProfile(id);
+				const fetchedUser = await getUserProfileByUsername(username);
 				setUser(fetchedUser);
 				if (fetchedUser) {
 					const userStats = await getUserStats(fetchedUser.id);
@@ -39,16 +42,16 @@ export default function UserProfile() {
 				setIsLoading(false);
 			}
 		};
-		if (id) {
+		if (username) {
 			fetchUserData();
 		}
-	}, [id]);
+	}, [username]);
 
 	if (isLoading) {
 		return <ProfileSkeleton />;
 	}
 
-	if (!id) {
+	if (!username) {
 		return (
 			<div className="flex justify-center items-center min-h-screen bg-background text-foreground">
 				<p className="text-lg">
@@ -63,27 +66,23 @@ export default function UserProfile() {
 			<div className="min-h-screen bg-background text-foreground">
 				<main className="container mx-auto px-4 py-8">
 					<div className="max-w-5xl mx-auto space-y-8">
-						<div className="flex items-start gap-6">
-							<Avatar className="h-24 w-24">
+						<div className="flex items-center gap-4 sm:gap-6">
+							<Avatar className="h-24 w-24 flex-shrink-0">
 								<AvatarImage src={user?.avatarURL} alt={user?.name} />
 								<AvatarFallback>
-									{user?.name.charAt(0).toUpperCase()}
+									{user?.name?.charAt(0).toUpperCase()}
 								</AvatarFallback>
 							</Avatar>
 							<div className="flex flex-col">
-								<div className="flex items-end space-x-2">
-									<h1 className="text-3xl font-bold">{user?.name}</h1>
-									<p className="text-xl text-muted-foreground">
-										{user?.username}
-									</p>
-								</div>
-								{stats?.principal_language ? (
-									<div className="mt-2 max-w-[200px]">
+								<p className="text-lg sm:text-xl text-muted-foreground truncate">
+									{user?.username}
+								</p>
+								<h1 className="text-2xl sm:text-3xl font-bold truncate">
+									{user?.name}
+								</h1>
+								{stats?.principal_language && (
+									<div className="mt-2">
 										<LanguageBadge language={stats.principal_language} />
-									</div>
-								) : (
-									<div className="mt-2 max-w-[200px]">
-										<LanguageBadge language="Sin información" />
 									</div>
 								)}
 							</div>

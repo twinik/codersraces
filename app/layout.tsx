@@ -35,10 +35,10 @@ export const metadata: Metadata = {
 		description: "¿Qué tan rápido podes programar?",
 		images: [
 			{
-				url: "https://www.coders-races.com/og-image.jpg",
+				url: "https://github.com/twinik/codersraces/blob/main/public/social.png",
 				width: 1200,
 				height: 630,
-				alt: "Coders Races - Competencia de programación",
+				alt: "Coders Races",
 			},
 		],
 	},

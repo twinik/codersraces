@@ -48,6 +48,7 @@ export interface UserLeaderboard {
 	user_id: string;
 	avatarURL: string;
 	name: string;
+	username: string;
 	average_cpm: number;
 	average_accuracy: number;
 	total_races: number;

@@ -19,7 +19,8 @@ export const getLeaderboard = async (
             total_races,
             principal_language,
             avatar_url,
-            full_name
+            full_name,
+			username
             `
 		)
 		.order("average_cpm", { ascending: false })
@@ -38,6 +39,7 @@ export const getLeaderboard = async (
 		user_id: stat.user_id,
 		avatarURL: stat.avatar_url || "",
 		name: stat.full_name || "",
+		username: stat.username || "",
 		average_cpm: stat.average_cpm,
 		average_accuracy: stat.average_accuracy,
 		total_races: stat.total_races,
