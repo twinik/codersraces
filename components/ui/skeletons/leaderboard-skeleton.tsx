@@ -1,8 +1,8 @@
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function LeaderboardSkeleton() {
 	return (
-		<div className="animate-fade-in-right animate-delay-400 animate-duration-900">
+		<div className="animate-fade-in-right  animate-duration-200">
 			<div className="rounded-lg border border-border overflow-hidden animate-pulse">
 				<div className="overflow-x-auto">
 					<table className="w-full">
@@ -41,5 +41,5 @@ export default function LeaderboardSkeleton() {
 				</div>
 			</div>
 		</div>
-	)
+	);
 }

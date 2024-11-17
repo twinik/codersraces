@@ -107,7 +107,7 @@ export default function Play() {
 	return (
 		<main className="flex-grow container mx-auto px-4 py-8">
 			<div className="max-w-7xl mx-auto space-y-6">
-				<div className="animate-fade-in-left animate-delay-400 animate-duration-900 text-center md:text-left">
+				<div className="animate-fade-in-left animate-duration-200 text-center md:text-left">
 					<h1 className="text-2xl md:text-3xl font-bold mb-2">
 						Elige tu modo de juego
 					</h1>
@@ -117,7 +117,7 @@ export default function Play() {
 					</p>
 				</div>
 
-				<div className="grid md:grid-cols-2 gap-6 animate-fade-in-right animate-delay-400 animate-duration-900">
+				<div className="grid md:grid-cols-2 gap-6 animate-fade-in-right animate-duration-200">
 					{/* Practice Mode */}
 					<Card className="bg-card border-border flex flex-col">
 						<CardHeader>

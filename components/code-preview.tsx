@@ -38,7 +38,7 @@ export function CodePreview() {
 
 	return (
 		<Atropos>
-			<div className="w-full md:w-[500px] bg-card rounded-lg overflow-hidden border border-border animate-fade-in-up animate-delay-400 animate-duration-900">
+			<div className="w-full md:w-[500px] bg-card rounded-lg overflow-hidden border border-border animate-fade-in-up animate-duration-200">
 				<div className="flex items-center gap-2 px-4 py-3 bg-muted border-b border-border">
 					<div className="w-3 h-3 rounded-full bg-red-500"></div>
 					<div className="w-3 h-3 rounded-full bg-yellow-500"></div>

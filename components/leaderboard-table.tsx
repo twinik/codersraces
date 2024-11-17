@@ -68,7 +68,7 @@ export default function LeaderBoardTable() {
 	}
 
 	return (
-		<div className="rounded-lg border border-border overflow-hidden animate-fade-in-right animate-delay-400 animate-duration-900">
+		<div className="rounded-lg border border-border overflow-hidden animate-fade-in-right  animate-duration-200">
 			<div className="overflow-x-auto scrollbar-hide">
 				<table className="w-full">
 					<thead>

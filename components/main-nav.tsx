@@ -52,7 +52,7 @@ export function MainNav() {
 
 	return (
 		<header>
-			<nav className="flex items-center justify-between p-4 max-w-7xl mx-auto w-full animate-fade-in-down animate-delay-400 animate-duration-900">
+			<nav className="flex items-center justify-between p-4 max-w-7xl mx-auto w-full animate-fade-in-down animate-duration-200">
 				<Sheet open={isOpen} onOpenChange={setIsOpen}>
 					<SheetTrigger asChild>
 						<Button variant="outline" size="icon" className="md:hidden">
