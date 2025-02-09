@@ -5,6 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import { Inter } from "next/font/google";
 import { MainNav } from "@/components/main-nav";
+import Squares from "@/components/squares-background";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
@@ -63,9 +64,18 @@ export default function RootLayout({
 			</head>
 			<body className={inter.className}>
 				<div className="dark">
-					<div className="min-h-screen bg-background text-foreground flex flex-col">
+					<div className="min-h-screen bg-background text-foreground flex flex-col relative">
+						<div className="absolute inset-0 z-0">
+							<Squares
+								speed={0.5}
+								squareSize={40}
+								direction="diagonal"
+								borderColor="#252525"
+								hoverFillColor="#222"
+							/>
+						</div>
 						<MainNav />
-						{children}
+						<div className="relative z-10 flex-grow">{children}</div>
 					</div>
 				</div>
 				<SpeedInsights />

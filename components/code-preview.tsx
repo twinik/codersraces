@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Atropos from "atropos/react";
 
-export function CodePreview() {
+export default function CodePreview() {
 	const [text, setText] = useState("");
 	const [cursorPosition, setCursorPosition] = useState(0);
 	const exampleText = `function fibonacci(n) {
